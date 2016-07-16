@@ -8,6 +8,7 @@ import java.util.List;
 import de.schuette.math.Line;
 import de.schuette.math.Math2D;
 import de.schuette.world.skills.Obstacle;
+import de.schuette.world.skills.PolygonObstacle;
 
 /**
  * A public util class with methods to perform a collision detection.
@@ -17,14 +18,34 @@ import de.schuette.world.skills.Obstacle;
  */
 public class Collision {
 
-	public static List<EntityPoint> detectCollision(Obstacle abstractObstacle, Obstacle obstacle) {
-		// TODO Auto-generated method stub
-		return null;
+	public static List<Point> detectCollision(Obstacle o1, Obstacle o2) {
+		return _detectCollision(o1, o2, true);
 	}
 
-	public static List<EntityPoint> detectFirstCollision(Obstacle abstractObstacle, Obstacle obstacle) {
-		// TODO Auto-generated method stub
-		return null;
+	public static List<Point> detectFirstCollision(Obstacle o1, Obstacle o2) {
+		return _detectCollision(o1, o2, false);
+	}
+
+	private static List<Point> _detectCollision(Obstacle o1, Obstacle o2, boolean all) {
+		List<Point> collisions = new LinkedList<>();
+		if (o1 instanceof PolygonObstacle && o2 instanceof PolygonObstacle) {
+			PolygonObstacle p1 = (PolygonObstacle) o1;
+			PolygonObstacle p2 = (PolygonObstacle) o2;
+			List<Line> h1 = p1.getHullPolygon();
+			List<Line> h2 = p2.getHullPolygon();
+			for (Line l1 : h1) {
+				for (Line l2 : h2) {
+					Point intersection = l1.intersects(l2);
+					if (intersection != null) {
+						collisions.add(intersection);
+						if (!all) {
+							return collisions;
+						}
+					}
+				}
+			}
+		}
+		return collisions;
 	}
 
 	/**

@@ -1,8 +1,7 @@
 package de.schuette.world.skills;
 
+import java.awt.Point;
 import java.util.List;
-
-import de.schuette.world.EntityPoint;
 
 /**
  * Defines the minimum amount of methods an obstacle must support to detect a
@@ -28,7 +27,7 @@ public interface Obstacle extends Entity {
 	 * @return Returns the list of points in world coordinates if there is a
 	 *         collision. Otherwise <code>null</code> is returned.
 	 */
-	public List<EntityPoint> detectCollision(Obstacle obstacle);
+	public List<Point> detectCollision(Obstacle obstacle);
 
 	/**
 	 * Checks this entity and the specified entity for collisions.
@@ -39,6 +38,6 @@ public interface Obstacle extends Entity {
 	 *         coordinates if there is a collision. Otherwise <code>null</code>
 	 *         is returned.
 	 */
-	public List<EntityPoint> detectFirstCollision(Obstacle obstacle);
+	public List<Point> detectFirstCollision(Obstacle obstacle);
 
 }

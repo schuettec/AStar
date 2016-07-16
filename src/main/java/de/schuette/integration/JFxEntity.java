@@ -10,7 +10,7 @@ import javafx.scene.Node;
  * @author schuettec
  *
  */
-public interface JFxEntity {
+public interface JFxEntity<T extends Entity> {
 
 	/**
 	 * This method is called by the framework to synchronize the JavaFX
@@ -18,5 +18,10 @@ public interface JFxEntity {
 	 * Cobra2D engine.
 	 */
 	public void synchronize();
+
+	/**
+	 * @return Returns the backed {@link Entity}.
+	 */
+	public T getEntity();
 
 }
