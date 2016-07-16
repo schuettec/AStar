@@ -1,4 +1,4 @@
-package astar;
+package de.schuette.algorithm.astar;
 
 import java.util.Arrays;
 
