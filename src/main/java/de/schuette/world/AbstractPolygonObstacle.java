@@ -2,6 +2,7 @@ package de.schuette.world;
 
 import java.awt.Point;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,8 +10,6 @@ import de.schuette.math.Line;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
 import de.schuette.world.skills.PolygonObstacle;
-import de.schuette.world.skills.Rotateable;
-import de.schuette.world.skills.Scalable;
 
 /**
  * Represents an abstract obstacle in the world. This is the most possible
@@ -29,7 +28,7 @@ import de.schuette.world.skills.Scalable;
  * 
  * @author schuettec
  */
-public class AbstractObstacle extends AbstractEntity implements PolygonObstacle, Rotateable, Scalable {
+public class AbstractPolygonObstacle extends AbstractEntity implements PolygonObstacle {
 
 	/**
 	 * Holds the list of {@link Line}s making up the collision hull polygon.
@@ -39,42 +38,20 @@ public class AbstractObstacle extends AbstractEntity implements PolygonObstacle,
 	 */
 	protected List<EntityPoint> entityPoints;
 
-	/**
-	 * Holds the current scaling factor.
-	 */
-	protected double scaling = 0;
-
-	/**
-	 * Holds the current rotation of the entity in the world.
-	 */
-	protected double degrees;
-
-	public AbstractObstacle() {
+	public AbstractPolygonObstacle() {
 		super();
 		this.entityPoints = new LinkedList<>();
 	}
 
-	public AbstractObstacle(Point worldCoordinates) {
+	public AbstractPolygonObstacle(Point worldCoordinates) {
 		super(worldCoordinates);
 		this.entityPoints = new LinkedList<EntityPoint>();
 	}
 
-	public AbstractObstacle(Point worldCoordinates, EntityPoint... entityPoints) {
+	public AbstractPolygonObstacle(Point worldCoordinates, EntityPoint... entityPoints) {
 		super(worldCoordinates);
 		this.entityPoints = new LinkedList<EntityPoint>();
-		setEntityPoints(entityPoints);
-	}
-
-	// TODO: Should this become a general method defined by interface?
-	public void setEntityPoints(EntityPoint[] entityPoints) {
-		this.entityPoints.clear();
-		this.entityPoints.addAll(Arrays.asList(entityPoints));
-		Collision.sortEntityPoints(this.entityPoints);
-	}
-
-	@Override
-	public void rotate(double degrees) {
-		this.degrees += degrees;
+		setHullPoints(entityPoints);
 	}
 
 	@Override
@@ -88,13 +65,17 @@ public class AbstractObstacle extends AbstractEntity implements PolygonObstacle,
 	}
 
 	@Override
-	public List<Line> getHullPolygon() {
-		return Collision.getHullPolygon(getHullPoints());
+	public List<Line> getHullPolygon(boolean worldCoordinates) {
+		return Collision.getHullPolygon(getHullPoints(worldCoordinates));
 	}
 
 	@Override
-	public List<EntityPoint> getHullPoints() {
-		return getWorldView(entityPoints);
+	public List<EntityPoint> getHullPoints(boolean worldCoordinates) {
+		if (worldCoordinates) {
+			return getWorldView(entityPoints);
+		} else {
+			return Collections.unmodifiableList(entityPoints);
+		}
 	}
 
 	private List<EntityPoint> getWorldView(List<EntityPoint> points) {
@@ -111,23 +92,10 @@ public class AbstractObstacle extends AbstractEntity implements PolygonObstacle,
 	}
 
 	@Override
-	public void setDegrees(double degrees) {
-		this.degrees = degrees;
-	}
-
-	@Override
-	public void setScale(double scale) {
-		this.scaling = scale;
-	}
-
-	@Override
-	public void scale(double scale) {
-		this.scaling += scaling;
-	}
-
-	@Override
-	public double getScale() {
-		return this.scaling;
+	public void setHullPoints(EntityPoint[] entityPoints) {
+		this.entityPoints.clear();
+		this.entityPoints.addAll(Arrays.asList(entityPoints));
+		Collision.sortEntityPoints(this.entityPoints);
 	}
 
 }

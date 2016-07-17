@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 
+import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.EntityPoint;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -36,13 +37,21 @@ public class Testapp extends Application {
 
 		Pane sceneContent = new Pane();
 
-		PolygonEntity user = new PolygonEntity(new Point(1000, 1000), new EntityPoint(-1, -1), new EntityPoint(1, -1),
-				new EntityPoint(-1, 1), new EntityPoint(1, 1));
-		user.getEntity().setScale(30);
+		// PolygonEntity user = new PolygonEntity(new Point(0, 0), new
+		// EntityPoint(-1, -1), new EntityPoint(1, -1),
+		// new EntityPoint(-1, 1), new EntityPoint(1, 1));
+		// user.setScale(30);
 
-		PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new EntityPoint(-1, -1),
-				new EntityPoint(1, -1), new EntityPoint(-1, 1), new EntityPoint(1, 1));
-		mapEntity.getEntity().setScale(30);
+		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(100, 140), 1));
+		user.setScale(30);
+
+		// PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new
+		// EntityPoint(-1, -1),
+		// new EntityPoint(1, -1), new EntityPoint(-1, 1), new EntityPoint(1,
+		// 1));
+		PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 30d),
+				new EntityPoint(135d, 30d), new EntityPoint(225d, 30d), new EntityPoint(315d, 30d));
+		// mapEntity.setScale(30);
 
 		sceneContent.getChildren().addAll(user, mapEntity);
 
@@ -61,17 +70,15 @@ public class Testapp extends Application {
 					}
 				}
 
-				List<Point> detectCollision = mapEntity.getEntity().detectCollision(user.getEntity());
+				List<Point> detectCollision = mapEntity.detectCollision(user);
 				for (Point p : detectCollision) {
-
-					System.out.println(p);
 
 					Circle c = new Circle(5);
 					c.setFill(Color.RED);
 					c.setTranslateX(p.x);
 					c.setTranslateY(p.y);
 					sceneContent.getChildren().add(c);
-					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500),
+					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(200),
 							new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
 					timeline.setOnFinished(e -> {
 						sceneContent.getChildren().remove(c);
@@ -81,7 +88,7 @@ public class Testapp extends Application {
 				}
 
 				// Animate
-				mapEntity.getEntity().rotate(1);
+				mapEntity.rotate(1);
 			}
 		};
 		timer.start();
@@ -89,12 +96,12 @@ public class Testapp extends Application {
 		sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				user.getEntity().setPosition(mouseEvent.getX(), mouseEvent.getY());
+				user.setPosition(mouseEvent.getX(), mouseEvent.getY());
 				mouseEvent.consume();
 			}
 		});
 
-		Scene scene = new Scene(sceneContent);
+		Scene scene = new Scene(sceneContent, 1000, 1000);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

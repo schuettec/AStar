@@ -22,7 +22,7 @@ public interface PolygonObstacle extends Obstacle {
 	 * 
 	 * @return Returns the hull polygon of this {@link Obstacle}.
 	 */
-	public List<Line> getHullPolygon();
+	public List<Line> getHullPolygon(boolean worldCoordinates);
 
 	/**
 	 * Returns the current state of the collision entity points. Properties like
@@ -37,6 +37,14 @@ public interface PolygonObstacle extends Obstacle {
 	 *         hull polygon. No specific order is assumed. The list is assumed
 	 *         to be non-modifyable.
 	 */
-	public List<EntityPoint> getHullPoints();
+	public List<EntityPoint> getHullPoints(boolean worldCoordinates);
+
+	/**
+	 * Sets the points of the collision hull.
+	 * 
+	 * @param entityPoints
+	 *            The entity points to set.
+	 */
+	public void setHullPoints(EntityPoint[] entityPoints);
 
 }

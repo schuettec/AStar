@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.schuette.math.Line;
 import de.schuette.math.Math2D;
+import de.schuette.world.skills.CircleObstacle;
 import de.schuette.world.skills.Obstacle;
 import de.schuette.world.skills.PolygonObstacle;
 
@@ -18,34 +19,109 @@ import de.schuette.world.skills.PolygonObstacle;
  */
 public class Collision {
 
+	// public static List<Point> detectCollision(CircleObstacle o1,
+	// CircleObstacle o2) {
+	// return _detectCollision(o1, o2, true);
+	// }
+	//
+	// public static List<Point> detectFirstCollision(CircleObstacle o1,
+	// CircleObstacle o2) {
+	// return _detectCollision(o1, o2, false);
+	// }
+
 	public static List<Point> detectCollision(Obstacle o1, Obstacle o2) {
-		return _detectCollision(o1, o2, true);
+		return detectCollision(o1, o2, true);
 	}
 
 	public static List<Point> detectFirstCollision(Obstacle o1, Obstacle o2) {
-		return _detectCollision(o1, o2, false);
+		return detectCollision(o1, o2, false);
 	}
 
-	private static List<Point> _detectCollision(Obstacle o1, Obstacle o2, boolean all) {
-		List<Point> collisions = new LinkedList<>();
+	public static List<Point> detectCollision(Obstacle o1, Obstacle o2, boolean all) {
 		if (o1 instanceof PolygonObstacle && o2 instanceof PolygonObstacle) {
-			PolygonObstacle p1 = (PolygonObstacle) o1;
-			PolygonObstacle p2 = (PolygonObstacle) o2;
-			List<Line> h1 = p1.getHullPolygon();
-			List<Line> h2 = p2.getHullPolygon();
-			for (Line l1 : h1) {
-				for (Line l2 : h2) {
-					Point intersection = l1.intersects(l2);
-					if (intersection != null) {
-						collisions.add(intersection);
-						if (!all) {
-							return collisions;
+			return _detectCollision((PolygonObstacle) o1, (PolygonObstacle) o2, all);
+		} else if (o1 instanceof CircleObstacle && o2 instanceof CircleObstacle) {
+			return _detectCollision((CircleObstacle) o1, (CircleObstacle) o2, all);
+		} else if (o1 instanceof CircleObstacle && o2 instanceof PolygonObstacle) {
+			return _detectCollision((CircleObstacle) o1, (PolygonObstacle) o2, all);
+		} else {
+			return _detectCollision((CircleObstacle) o2, (PolygonObstacle) o1, all);
+		}
+	}
+
+	private static List<Point> _detectCollision(CircleObstacle p1, CircleObstacle p2, boolean all) {
+		throw new UnsupportedOperationException();
+	}
+
+	private static List<Point> _detectCollision(CircleObstacle p1, PolygonObstacle p2, boolean all) {
+		List<Point> collisions = new LinkedList<>();
+		List<Line> h2 = p2.getHullPolygon(true);
+		for (Line l2 : h2) {
+			// Kreisgleichung:
+			// (x - xM)² + ([m * x + n] - yM)² = r²
+			// =>
+			// x² - ((xm + cm) / (m² + 1)) x + (xm² + c² - r²) / (m² + 1) = 0
+			double xm = p1.getPosition().x;
+			double ym = p1.getPosition().y;
+			double r = p1.getRadius();
+			double m = l2.getM();
+			double n = l2.getB();
+
+			double p = ((-2 * xm + 2 * m * n - 2 * m * ym) / (Math.pow(m, 2) + 1));
+			double q = ((Math.pow(xm, 2) + Math.pow(n - ym, 2) - Math.pow(r, 2)) / (Math.pow(m, 2) + 1));
+
+			double[] results = pqFormula(p, q);
+
+			if (results.length > 0) {
+				for (double result : results) {
+					if (result >= 0) {
+						int x = (int) (Math.round(result));
+						int y = (int) (Math.round(m * x + n));
+
+						if (l2.isDefined(new Point.Double(x, y))) {
+							collisions.add(new Point(x, y));
 						}
 					}
 				}
 			}
 		}
+
 		return collisions;
+	}
+
+	private static List<Point> _detectCollision(PolygonObstacle p1, PolygonObstacle p2, boolean all) {
+		List<Point> collisions = new LinkedList<>();
+		List<Line> h1 = p1.getHullPolygon(true);
+		List<Line> h2 = p2.getHullPolygon(true);
+		for (Line l1 : h1) {
+			for (Line l2 : h2) {
+				Point intersection = l1.intersects(l2);
+				if (intersection != null) {
+					collisions.add(intersection);
+					if (!all) {
+						return collisions;
+					}
+				}
+			}
+		}
+		return collisions;
+	}
+
+	public static double[] pqFormula(double pP, double pQ) {
+		double diskriminante;
+		diskriminante = (pP / 2.0) * (pP / 2.0) - pQ;
+		if (diskriminante >= 0) {
+			double x1, x2;
+			x1 = -(pP / 2) + Math.sqrt(diskriminante);
+			x2 = -(pP / 2) - Math.sqrt(diskriminante);
+			if (x1 == x2) {
+				return new double[] { x2 };
+			} else {
+				return new double[] { x1, x2 };// Was x1, x2
+			}
+		} else {
+			return new double[] {};
+		}
 	}
 
 	/**
