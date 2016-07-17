@@ -1,11 +1,13 @@
 package de.schuette.integration;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.EntityPoint;
+import de.schuette.world.skills.Obstacle;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -49,11 +51,15 @@ public class Testapp extends Application {
 		// EntityPoint(-1, -1),
 		// new EntityPoint(1, -1), new EntityPoint(-1, 1), new EntityPoint(1,
 		// 1));
-		PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d),
-				new EntityPoint(135d, 1d), new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
-		mapEntity.setScale(50);
+		PolygonEntity e1 = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
+		e1.setScale(50);
 
-		sceneContent.getChildren().addAll(user, mapEntity);
+		PolygonEntity e2 = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
+		e2.setScale(50);
+
+		sceneContent.getChildren().addAll(user, e1, e2);
 
 		AnimationTimer timer = new AnimationTimer() {
 
@@ -70,26 +76,45 @@ public class Testapp extends Application {
 					}
 				}
 
-				List<Point> detectCollision = mapEntity.detectCollision(user);
-				System.out.println(detectCollision.size());
-				for (Point p : detectCollision) {
+				for (Node c1 : new ArrayList<>(sceneContent.getChildren())) {
+					if (!(c1 instanceof Obstacle)) {
+						continue;
+					}
 
-					Circle c = new Circle(5);
-					c.setFill(Color.RED);
-					c.setTranslateX(p.x);
-					c.setTranslateY(p.y);
-					sceneContent.getChildren().add(c);
-					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
-							new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
-					timeline.setOnFinished(e -> {
-						sceneContent.getChildren().remove(c);
-					});
-					timeline.play();
+					for (Node c2 : new ArrayList<>(sceneContent.getChildren())) {
+						if (!(c2 instanceof Obstacle)) {
+							continue;
+						}
+						if (c1 == c2)
+							continue;
 
+						Obstacle o1 = (Obstacle) c1;
+						Obstacle o2 = (Obstacle) c2;
+						{
+
+							List<Point> detectCollision = o1.detectCollision(o2);
+							for (Point p : detectCollision) {
+
+								Circle c = new Circle(5);
+								c.setFill(Color.RED);
+								c.setTranslateX(p.x);
+								c.setTranslateY(p.y);
+								sceneContent.getChildren().add(c);
+								Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
+										new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
+								timeline.setOnFinished(e -> {
+									sceneContent.getChildren().remove(c);
+								});
+								timeline.play();
+
+							}
+						}
+
+					}
 				}
 
 				// Animate
-				mapEntity.rotate(1);
+				e1.rotate(1);
 			}
 		};
 		timer.start();
