@@ -124,6 +124,9 @@ public class Testapp extends Application {
 			public void handle(MouseEvent mouseEvent) {
 				user.setPosition(mouseEvent.getX(), mouseEvent.getY());
 				mouseEvent.consume();
+
+				// Find path:
+
 			}
 		});
 
