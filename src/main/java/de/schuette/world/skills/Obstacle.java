@@ -1,7 +1,8 @@
 package de.schuette.world.skills;
 
-import java.awt.Point;
 import java.util.List;
+
+import de.schuette.math.Point;
 
 /**
  * Defines the minimum amount of methods an obstacle must support to detect a

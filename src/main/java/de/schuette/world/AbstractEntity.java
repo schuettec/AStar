@@ -1,7 +1,6 @@
 package de.schuette.world;
 
-import java.awt.Point;
-
+import de.schuette.math.Point;
 import de.schuette.world.skills.Entity;
 
 /**

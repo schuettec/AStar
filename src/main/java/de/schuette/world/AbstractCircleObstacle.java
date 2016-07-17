@@ -1,8 +1,8 @@
 package de.schuette.world;
 
-import java.awt.Point;
 import java.util.List;
 
+import de.schuette.math.Point;
 import de.schuette.world.skills.CircleObstacle;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;

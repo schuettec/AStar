@@ -1,9 +1,9 @@
 package de.schuette.integration;
 
-import java.awt.Point;
 import java.util.List;
 
 import de.schuette.math.Line;
+import de.schuette.math.Point;
 import de.schuette.world.AbstractPolygonObstacle;
 import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;

@@ -1,12 +1,12 @@
 package de.schuette.world;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.schuette.math.Line;
 import de.schuette.math.Math2D;
+import de.schuette.math.Point;
 import de.schuette.world.skills.CircleObstacle;
 import de.schuette.world.skills.Obstacle;
 import de.schuette.world.skills.PolygonObstacle;
@@ -67,18 +67,22 @@ public class Collision {
 			double m = l2.getM();
 			double n = l2.getB();
 
-			double p = ((-2 * xm + 2 * m * n - 2 * m * ym) / (Math.pow(m, 2) + 1));
-			double q = ((Math.pow(xm, 2) + Math.pow(n - ym, 2) - Math.pow(r, 2)) / (Math.pow(m, 2) + 1));
+			double p = ((-2d * xm + 2d * m * n - 2d * m * ym) / (Math.pow(m, 2) + 1d));
+			double q = ((Math.pow(xm, 2) + Math.pow(n - ym, 2) - Math.pow(r, 2)) / (Math.pow(m, 2) + 1d));
 
 			double[] results = pqFormula(p, q);
 
 			if (results.length > 0) {
 				for (double result : results) {
 					if (result >= 0) {
-						int x = (int) (Math.round(result));
-						int y = (int) (Math.round(m * x + n));
+						double x = result;
+						double y = m * x + n;
 
-						if (l2.isDefined(new Point.Double(x, y))) {
+						// double rTest = Math.pow(x - xm, 2) + Math.pow(y - ym,
+						// 2);
+						// boolean isDefined = rTest <= Math.pow(r, 2);
+
+						if (l2.isDefined(new Point(x, y))) {
 							collisions.add(new Point(x, y));
 						}
 					}

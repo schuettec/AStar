@@ -1,12 +1,12 @@
 package de.schuette.world;
 
-import java.awt.Point;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.schuette.math.Line;
+import de.schuette.math.Point;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
 import de.schuette.world.skills.PolygonObstacle;

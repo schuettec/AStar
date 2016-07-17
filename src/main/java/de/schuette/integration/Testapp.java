@@ -1,9 +1,9 @@
 package de.schuette.integration;
 
-import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 
+import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.EntityPoint;
 import javafx.animation.AnimationTimer;
@@ -43,15 +43,15 @@ public class Testapp extends Application {
 		// user.setScale(30);
 
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(100, 140), 1));
-		user.setScale(30);
+		user.setScale(50);
 
 		// PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new
 		// EntityPoint(-1, -1),
 		// new EntityPoint(1, -1), new EntityPoint(-1, 1), new EntityPoint(1,
 		// 1));
-		PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 30d),
-				new EntityPoint(135d, 30d), new EntityPoint(225d, 30d), new EntityPoint(315d, 30d));
-		// mapEntity.setScale(30);
+		PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d),
+				new EntityPoint(135d, 1d), new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
+		mapEntity.setScale(50);
 
 		sceneContent.getChildren().addAll(user, mapEntity);
 
@@ -71,6 +71,7 @@ public class Testapp extends Application {
 				}
 
 				List<Point> detectCollision = mapEntity.detectCollision(user);
+				System.out.println(detectCollision.size());
 				for (Point p : detectCollision) {
 
 					Circle c = new Circle(5);
@@ -78,7 +79,7 @@ public class Testapp extends Application {
 					c.setTranslateX(p.x);
 					c.setTranslateY(p.y);
 					sceneContent.getChildren().add(c);
-					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(200),
+					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
 							new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
 					timeline.setOnFinished(e -> {
 						sceneContent.getChildren().remove(c);

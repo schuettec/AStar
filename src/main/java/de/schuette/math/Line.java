@@ -1,16 +1,13 @@
 package de.schuette.math;
 
-import java.awt.Point;
-import java.awt.geom.Point2D;
-
 public class Line {
 
-	private Point2D.Double x1, x2;
+	private Point x1, x2;
 	private boolean parallelY = false;
 
 	public Line(final Point x1, final Point x2) {
-		this.setX1(new Point2D.Double(x1.x, x1.y));
-		this.setX2(new Point2D.Double(x2.x, x2.y));
+		this.setX1(new Point(x1.x, x1.y));
+		this.setX2(new Point(x2.x, x2.y));
 	}
 
 	/**
@@ -27,17 +24,17 @@ public class Line {
 		// 1. Fall | |
 		if (this.parallelY && l.isParallelY()) {
 			if (l.isDefined(this.getX1())) {
-				return new Point((int) this.getX1().x, (int) this.getX1().y);
+				return new Point(this.getX1().x, this.getX1().y);
 			}
 			if (l.isDefined(this.getX2())) {
-				return new Point((int) this.getX2().x, (int) this.getX2().y);
+				return new Point(this.getX2().x, this.getX2().y);
 			}
 
 			if (this.isDefined(l.getX1())) {
-				return new Point((int) l.getX1().x, (int) l.getX1().y);
+				return new Point(l.getX1().x, l.getX1().y);
 			}
 			if (this.isDefined(l.getX2())) {
-				return new Point((int) l.getX2().x, (int) l.getX2().y);
+				return new Point(l.getX2().x, l.getX2().y);
 			}
 
 			return null;
@@ -45,9 +42,9 @@ public class Line {
 
 		// 2. Fall | --
 		if (this.parallelY) {
-			final Point2D.Double schnittPunkt = new Point2D.Double(this.x1.x, l.getY(this.x1.x));
+			final Point schnittPunkt = new Point(this.x1.x, l.getY(this.x1.x));
 			if (this.isDefined(schnittPunkt) && l.isDefined(schnittPunkt)) {
-				return new Point((int) schnittPunkt.getX(), (int) schnittPunkt.getY());
+				return new Point(schnittPunkt.getX(), schnittPunkt.getY());
 			} else {
 				return null;
 			}
@@ -56,9 +53,9 @@ public class Line {
 
 		// 3. Fall -- |
 		if (l.isParallelY()) {
-			final Point2D.Double schnittPunkt = new Point2D.Double(l.getX1().x, this.getY(l.getX1().x));
+			final Point schnittPunkt = new Point(l.getX1().x, this.getY(l.getX1().x));
 			if (l.isDefined(schnittPunkt) && this.isDefined(schnittPunkt)) {
-				return new Point((int) schnittPunkt.getX(), (int) schnittPunkt.getY());
+				return new Point(schnittPunkt.getX(), schnittPunkt.getY());
 			} else {
 				return null;
 			}
@@ -67,21 +64,21 @@ public class Line {
 		// 4. Fall === (gleiche Steigung; parallel zueinander)
 		if (this.getM() == l.getM()) {
 			if (this.isDefined(l.getX1())) {
-				return new Point((int) l.getX1().x, (int) l.getX1().y);
+				return new Point(l.getX1().x, l.getX1().y);
 			}
 			if (this.isDefined(l.getX2())) {
-				return new Point((int) l.getX2().x, (int) l.getX2().y);
+				return new Point(l.getX2().x, l.getX2().y);
 			}
 			if (l.isDefined(this.getX1())) {
-				return new Point((int) this.getX1().x, (int) this.getX1().y);
+				return new Point(this.getX1().x, this.getX1().y);
 			}
 			if (l.isDefined(this.getX2())) {
-				return new Point((int) this.getX2().x, (int) this.getX2().y);
+				return new Point(this.getX2().x, this.getX2().y);
 			}
 
 			/*
-			 * if(getB() == l.getB()) { return new Point((int)l.getX1().getX(),
-			 * (int)l.getX1().getX()); }
+			 * if(getB() == l.getB()) { return new Point(l.getX1().getX(),
+			 * l.getX1().getX()); }
 			 */
 			return null;
 		}
@@ -92,24 +89,24 @@ public class Line {
 
 		double y = this.getY(x);
 
-		Point2D.Double schnittPunkt = new Point2D.Double(x, y);
+		Point schnittPunkt = new Point(x, y);
 		if (this.isDefined(schnittPunkt) && l.isDefined(schnittPunkt)) {
-			return new Point((int) schnittPunkt.getX(), (int) schnittPunkt.getY());
+			return new Point(schnittPunkt.getX(), schnittPunkt.getY());
 		}
 
 		x = (this.getB() - l.getB()) / (l.getM() - this.getM());
 
 		y = this.getY(x);
 
-		schnittPunkt = new Point2D.Double(x, y);
+		schnittPunkt = new Point(x, y);
 		if (this.isDefined(schnittPunkt) && l.isDefined(schnittPunkt)) {
-			return new Point((int) schnittPunkt.getX(), (int) schnittPunkt.getY());
+			return new Point(schnittPunkt.getX(), schnittPunkt.getY());
 		}
 
 		return null;
 	}
 
-	public boolean isDefined(final Point2D.Double point) {
+	public boolean isDefined(final Point point) {
 		if (this.parallelY) {
 			if (point.x != this.getX1().x) {
 				return false;
@@ -136,7 +133,7 @@ public class Line {
 			// stattgefunden
 			// Lösungsansatz: Auf ungenauen Integer runden und auf Gleichheit
 			// prüfen
-			if (((int) this.getY(point.x)) == ((int) point.y)) {
+			if (Math2D.saveRound(this.getY(point.x)) == Math2D.saveRound(point.y)) {
 				return true;
 			}
 		}
@@ -171,27 +168,27 @@ public class Line {
 
 	}
 
-	public Point2D.Double getX1() {
+	public Point getX1() {
 		return this.x1;
 	}
 
-	public Point2D.Double getX2() {
+	public Point getX2() {
 		return this.x2;
 	}
 
 	public Point getStartPoint() {
-		return new Point((int) Math.round(this.x1.getX()), (int) Math.round(this.x1.getY()));
+		return new Point(this.x1.getX(), this.x1.getY());
 	}
 
 	public Point getEndPoint() {
-		return new Point((int) Math.round(this.x2.getX()), (int) Math.round(this.x2.getY()));
+		return new Point(this.x2.getX(), this.x2.getY());
 	}
 
 	public boolean isParallelY() {
 		return this.parallelY;
 	}
 
-	public void setX1(final Point2D.Double x1) {
+	public void setX1(final Point x1) {
 		this.x1 = x1;
 
 		if (this.x2 == null) {
@@ -202,7 +199,7 @@ public class Line {
 		}
 	}
 
-	public void setX2(final Point2D.Double x2) {
+	public void setX2(final Point x2) {
 		this.x2 = x2;
 
 		if (this.x1.x == x2.x) {

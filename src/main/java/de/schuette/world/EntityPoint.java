@@ -1,9 +1,9 @@
 package de.schuette.world;
 
-import java.awt.Point;
 import java.io.Serializable;
 
 import de.schuette.math.Math2D;
+import de.schuette.math.Point;
 import de.schuette.world.skills.Obstacle;
 
 /**

@@ -1,6 +1,6 @@
 package de.schuette.world.skills;
 
-import java.awt.Point;
+import de.schuette.math.Point;
 
 /**
  * This interface is implemented by objects that "live" in a world and can
