@@ -8,6 +8,7 @@ import java.util.List;
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.Algorithm;
+import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
@@ -83,26 +84,8 @@ public class Testapp extends Application {
 
 				List<Point> detectCollision = null;
 
-				for (Entity c1 : new ArrayList<>(map)) {
-					if (!(c1 instanceof Obstacle)) {
-						continue;
-					}
-
-					for (Entity c2 : new ArrayList<>(map)) {
-						if (!(c2 instanceof Obstacle)) {
-							continue;
-						}
-						if (c1 == c2)
-							continue;
-
-						Obstacle o1 = (Obstacle) c1;
-						Obstacle o2 = (Obstacle) c2;
-						{
-							detectCollision = o1.detectCollision(o2);
-						}
-
-					}
-				}
+				// Detect full collision set to show them all
+				detectCollision = Collision.detectCollision(map,  true);
 
 				for (Point p : detectCollision) {
 

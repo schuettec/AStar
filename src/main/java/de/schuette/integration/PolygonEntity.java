@@ -97,13 +97,8 @@ public class PolygonEntity extends Polygon implements JFxEntity, PolygonObstacle
 	}
 
 	@Override
-	public List<Point> detectCollision(Obstacle obstacle) {
-		return entity.detectCollision(obstacle);
-	}
-
-	@Override
-	public List<Point> detectFirstCollision(Obstacle obstacle) {
-		return entity.detectFirstCollision(obstacle);
+	public List<Point> detectCollision(Obstacle obstacle, boolean all) {
+		return entity.detectCollision(obstacle,all);
 	}
 
 	@Override

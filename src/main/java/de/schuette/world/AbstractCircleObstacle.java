@@ -45,14 +45,10 @@ public class AbstractCircleObstacle extends AbstractEntity implements CircleObst
 	}
 
 	@Override
-	public List<Point> detectCollision(Obstacle obstacle) {
-		return Collision.detectCollision(this, obstacle);
+	public List<Point> detectCollision(Obstacle obstacle,  boolean all) {
+		return Collision.detectCollision(this, obstacle, all);
 	}
 
-	@Override
-	public List<Point> detectFirstCollision(Obstacle obstacle) {
-		return Collision.detectFirstCollision(this, obstacle);
-	}
 
 	@Override
 	public double getRadius() {

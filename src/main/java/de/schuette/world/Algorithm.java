@@ -55,7 +55,7 @@ public class Algorithm {
 			});
 
 			try {
-				Thread.sleep(500);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -129,7 +129,7 @@ public class Algorithm {
 		for (int i = 0; i <= 315; i += 45) {
 			Point circle = Math2D.getCircle(current, radius, i);
 			// Check for collision:
-
+			
 			successors.add(circle);
 		}
 

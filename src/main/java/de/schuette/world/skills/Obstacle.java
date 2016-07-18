@@ -28,17 +28,7 @@ public interface Obstacle extends Entity {
 	 * @return Returns the list of points in world coordinates if there is a
 	 *         collision. Otherwise <code>null</code> is returned.
 	 */
-	public List<Point> detectCollision(Obstacle obstacle);
+	public List<Point> detectCollision(Obstacle obstacle, boolean all);
 
-	/**
-	 * Checks this entity and the specified entity for collisions.
-	 * 
-	 * @param obstacle
-	 *            The other entity.
-	 * @return Returns the first detected point of collision in world
-	 *         coordinates if there is a collision. Otherwise <code>null</code>
-	 *         is returned.
-	 */
-	public List<Point> detectFirstCollision(Obstacle obstacle);
 
 }

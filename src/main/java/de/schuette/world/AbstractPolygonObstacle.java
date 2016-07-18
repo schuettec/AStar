@@ -55,13 +55,8 @@ public class AbstractPolygonObstacle extends AbstractEntity implements PolygonOb
 	}
 
 	@Override
-	public List<Point> detectCollision(Obstacle obstacle) {
-		return Collision.detectCollision(this, obstacle);
-	}
-
-	@Override
-	public List<Point> detectFirstCollision(Obstacle obstacle) {
-		return Collision.detectFirstCollision(this, obstacle);
+	public List<Point> detectCollision(Obstacle obstacle, boolean all) {
+		return Collision.detectCollision(this, obstacle, all);
 	}
 
 	@Override

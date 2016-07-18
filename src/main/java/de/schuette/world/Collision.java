@@ -8,6 +8,7 @@ import de.schuette.math.Line;
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
 import de.schuette.world.skills.CircleObstacle;
+import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
 import de.schuette.world.skills.PolygonObstacle;
 
@@ -19,23 +20,33 @@ import de.schuette.world.skills.PolygonObstacle;
  */
 public class Collision {
 
-	// public static List<Point> detectCollision(CircleObstacle o1,
-	// CircleObstacle o2) {
-	// return _detectCollision(o1, o2, true);
-	// }
-	//
-	// public static List<Point> detectFirstCollision(CircleObstacle o1,
-	// CircleObstacle o2) {
-	// return _detectCollision(o1, o2, false);
-	// }
 
-	public static List<Point> detectCollision(Obstacle o1, Obstacle o2) {
-		return detectCollision(o1, o2, true);
+	public static List<Point> detectCollision(List<Entity> map, boolean all) {
+		List<Point> detectCollision = new LinkedList<>();
+		
+		for (Entity c1 : new ArrayList<>(map)) {
+			if (!(c1 instanceof Obstacle)) {
+				continue;
+			}
+
+			for (Entity c2 : new ArrayList<>(map)) {
+				if (!(c2 instanceof Obstacle)) {
+					continue;
+				}
+				if (c1 == c2)
+					continue;
+
+				Obstacle o1 = (Obstacle) c1;
+				Obstacle o2 = (Obstacle) c2;
+				{
+					detectCollision = o1.detectCollision(o2, all);
+				}
+
+			}
+		}
+		return detectCollision;
 	}
 
-	public static List<Point> detectFirstCollision(Obstacle o1, Obstacle o2) {
-		return detectCollision(o1, o2, false);
-	}
 
 	public static List<Point> detectCollision(Obstacle o1, Obstacle o2, boolean all) {
 		if (o1 instanceof PolygonObstacle && o2 instanceof PolygonObstacle) {

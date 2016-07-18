@@ -85,13 +85,9 @@ public class CircleEntity extends Circle implements JFxEntity, CircleObstacle {
 	}
 
 	@Override
-	public List<Point> detectCollision(Obstacle obstacle) {
-		return entity.detectCollision(obstacle);
+	public List<Point> detectCollision(Obstacle obstacle, boolean all) {
+		return entity.detectCollision(obstacle, all);
 	}
 
-	@Override
-	public List<Point> detectFirstCollision(Obstacle obstacle) {
-		return entity.detectFirstCollision(obstacle);
-	}
 
 }
