@@ -45,18 +45,10 @@ public class Testapp extends Application {
 //		StackPane stack = new StackPane(sceneContent, debugContent);
 //		DEBUG = debugContent;
 
-		// PolygonEntity user = new PolygonEntity(new Point(0, 0), new
-		// EntityPoint(-1, -1), new EntityPoint(1, -1),
-		// new EntityPoint(-1, 1), new EntityPoint(1, 1));
-		// user.setScale(30);
 
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
 		user.setScale(65);
 
-		// PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new
-		// EntityPoint(-1, -1),
-		// new EntityPoint(1, -1), new EntityPoint(-1, 1), new EntityPoint(1,
-		// 1));
 		PolygonEntity e1 = new PolygonEntity(new Point(200, 200), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e1.setScale(65);
@@ -64,13 +56,21 @@ public class Testapp extends Application {
 		PolygonEntity e2 = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e2.setScale(65);
+		PolygonEntity e3 = new PolygonEntity(new Point(300, 300), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
+		e3.setScale(65);
+		PolygonEntity e4 = new PolygonEntity(new Point(150, 150), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(200d, 1d), new EntityPoint(235d, 1d), new EntityPoint(265d, 1d), new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
+		e4.setScale(65);
 
 		List<Entity> map = new LinkedList<>();
 		map.add(user);
 		map.add(e1);
 		map.add(e2);
+		map.add(e3);
+		map.add(e4);
 
-		sceneContent.getChildren().addAll(user, e1, e2);
+		sceneContent.getChildren().addAll(user, e1, e2, e3, e4);
 
 		synchronizeEntities(sceneContent);
 
@@ -85,8 +85,6 @@ public class Testapp extends Application {
 				// Detect full collision set to show them all
 				detectCollision = Collision.detectCollision(map,  true);
 				
-				System.out.println(detectCollision.size());
-
 				for (Point p : detectCollision) {
 
 					Circle c = new Circle(5);
@@ -94,7 +92,7 @@ public class Testapp extends Application {
 					c.setTranslateX(p.x);
 					c.setTranslateY(p.y);
 					sceneContent.getChildren().add(c);
-					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(150),
+					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
 							new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
 					timeline.setOnFinished(e -> {
 						sceneContent.getChildren().remove(c);
@@ -105,6 +103,9 @@ public class Testapp extends Application {
 
 				// Animate
 				e1.rotate(1);
+				e2.rotate(1);
+				e3.rotate(1);
+				e4.rotate(1);
 			}
 
 		};
