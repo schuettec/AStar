@@ -35,11 +35,11 @@ public class Collision {
 				}
 				if (c1 == c2)
 					continue;
-
+				
 				Obstacle o1 = (Obstacle) c1;
 				Obstacle o2 = (Obstacle) c2;
 				{
-					detectCollision = o1.detectCollision(o2, all);
+					detectCollision.addAll(o1.detectCollision(o2, all));
 				}
 
 			}
@@ -93,8 +93,10 @@ public class Collision {
 						// 2);
 						// boolean isDefined = rTest <= Math.pow(r, 2);
 
-						if (l2.isDefined(new Point(x, y))) {
-							collisions.add(new Point(x, y));
+						Point point = new Point(x, y);
+						if (l2.isDefined(point)) {
+							collisions.add(point);
+							System.out.println(point);
 						}
 					}
 				}

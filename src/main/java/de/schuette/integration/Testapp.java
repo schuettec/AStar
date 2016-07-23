@@ -1,26 +1,24 @@
 package de.schuette.integration;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
-import de.schuette.world.Algorithm;
 import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
 import de.schuette.world.skills.Entity;
-import de.schuette.world.skills.Obstacle;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -43,9 +41,9 @@ public class Testapp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		Pane sceneContent = new Pane();
-		Pane debugContent = new Pane();
-		StackPane stack = new StackPane(sceneContent, debugContent);
-		DEBUG = debugContent;
+//		Pane debugContent = new Pane();
+//		StackPane stack = new StackPane(sceneContent, debugContent);
+//		DEBUG = debugContent;
 
 		// PolygonEntity user = new PolygonEntity(new Point(0, 0), new
 		// EntityPoint(-1, -1), new EntityPoint(1, -1),
@@ -53,19 +51,19 @@ public class Testapp extends Application {
 		// user.setScale(30);
 
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
-		user.setScale(50);
+		user.setScale(65);
 
 		// PolygonEntity mapEntity = new PolygonEntity(new Point(100, 100), new
 		// EntityPoint(-1, -1),
 		// new EntityPoint(1, -1), new EntityPoint(-1, 1), new EntityPoint(1,
 		// 1));
-		PolygonEntity e1 = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+		PolygonEntity e1 = new PolygonEntity(new Point(200, 200), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
-		e1.setScale(50);
+		e1.setScale(65);
 
 		PolygonEntity e2 = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
-		e2.setScale(50);
+		e2.setScale(65);
 
 		List<Entity> map = new LinkedList<>();
 		map.add(user);
@@ -86,6 +84,8 @@ public class Testapp extends Application {
 
 				// Detect full collision set to show them all
 				detectCollision = Collision.detectCollision(map,  true);
+				
+				System.out.println(detectCollision.size());
 
 				for (Point p : detectCollision) {
 
@@ -94,7 +94,7 @@ public class Testapp extends Application {
 					c.setTranslateX(p.x);
 					c.setTranslateY(p.y);
 					sceneContent.getChildren().add(c);
-					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
+					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(150),
 							new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
 					timeline.setOnFinished(e -> {
 						sceneContent.getChildren().remove(c);
@@ -113,42 +113,43 @@ public class Testapp extends Application {
 		List<Circle> paths = new LinkedList<>();
 
 		// Find path:
-
-		Thread t = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				List<Point> findPath = Algorithm.findPath(user, new Point(0, 0), map, user.getRadius());
-				System.out.println(findPath.size());
-
-				// sceneContent.getChildren().removeAll(paths);
-
-				for (Point p : findPath) {
-
-					Circle c = new Circle(5);
-					c.setFill(Color.GREEN);
-					c.setTranslateX(p.x);
-					c.setTranslateY(p.y);
-					paths.add(c);
-
-				}
-			}
-		});
-		t.start();
-
-		// sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new
-		// EventHandler<MouseEvent>() {
-		// @Override
-		// public void handle(MouseEvent mouseEvent) {
-		// user.setPosition(mouseEvent.getX(), mouseEvent.getY());
-		// mouseEvent.consume();
 		//
+		// Thread t = new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// List<Point> findPath = Algorithm.findPath(user, new Point(0, 0), map,
+		// user.getRadius());
+		// System.out.println(findPath.size());
+		//
+		// // sceneContent.getChildren().removeAll(paths);
+		//
+		// for (Point p : findPath) {
+		//
+		// Circle c = new Circle(5);
+		// c.setFill(Color.GREEN);
+		// c.setTranslateX(p.x);
+		// c.setTranslateY(p.y);
+		// paths.add(c);
 		//
 		// }
+		// }
 		// });
+		// t.start();
 
-		Scene scene = new Scene(stack, 1000, 1000);
+		 sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new
+		 EventHandler<MouseEvent>() {
+		 @Override
+		 public void handle(MouseEvent mouseEvent) {
+		 user.setPosition(mouseEvent.getX(), mouseEvent.getY());
+		 mouseEvent.consume();
+		
+		
+		 }
+		 });
+
+		Scene scene = new Scene(sceneContent, 1000, 1000);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
