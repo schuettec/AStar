@@ -2,7 +2,6 @@ package de.schuette.world;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.schuette.math.Line;
@@ -30,28 +29,16 @@ import de.schuette.world.skills.PolygonObstacle;
  */
 public class AbstractPolygonObstacle extends AbstractEntity implements PolygonObstacle {
 
-	/**
-	 * Holds the list of {@link Line}s making up the collision hull polygon.
-	 * Note: After every modification of the list call
-	 * {@link Collision#sortEntityPoints(List)} to make sure the points are
-	 * ordered as polygon with non-crossing lines.
-	 */
-	protected List<EntityPoint> entityPoints;
-
 	public AbstractPolygonObstacle() {
 		super();
-		this.entityPoints = new LinkedList<>();
 	}
 
 	public AbstractPolygonObstacle(Point worldCoordinates) {
 		super(worldCoordinates);
-		this.entityPoints = new LinkedList<EntityPoint>();
 	}
 
 	public AbstractPolygonObstacle(Point worldCoordinates, EntityPoint... entityPoints) {
 		super(worldCoordinates);
-		this.entityPoints = new LinkedList<EntityPoint>();
-		setHullPoints(entityPoints);
 	}
 
 	@Override

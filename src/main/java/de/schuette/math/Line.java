@@ -1,5 +1,12 @@
 package de.schuette.math;
 
+/**
+ * This class describes a geometric line in a 2D coordinate system. It is
+ * basically a representation of the formula <code>g(x) = m * x + b</code>
+ * 
+ * @author Chris
+ *
+ */
 public class Line {
 
 	private Point x1, x2;

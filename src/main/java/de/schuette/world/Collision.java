@@ -88,15 +88,9 @@ public class Collision {
 					if (result >= 0) {
 						double x = result;
 						double y = m * x + n;
-
-						// double rTest = Math.pow(x - xm, 2) + Math.pow(y - ym,
-						// 2);
-						// boolean isDefined = rTest <= Math.pow(r, 2);
-
 						Point point = new Point(x, y);
 						if (l2.isDefined(point)) {
 							collisions.add(point);
-							System.out.println(point);
 						}
 					}
 				}
