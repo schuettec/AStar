@@ -20,21 +20,6 @@ public interface Shape {
 	 */
 	public Shape rotate(double degrees);
 
-	// /**
-	// * Rotates this {@link Shape} using the specified rotation point. The
-	// * rotation point is specified relatively to the current translation of
-	// this
-	// * {@link Shape}
-	// *
-	// * @param degrees
-	// * The amount of degrees to rotate.
-	// * @param rotationCenter
-	// * The rotation center relative to the current translation.
-	// * @return Returns this {@link Shape} to support a fluent API style of
-	// * method calls
-	// */
-	// public Shape rotate(double degrees, Point rotationCenter);
-
 	/**
 	 * Translates the shape by adding the specified translation.
 	 * 

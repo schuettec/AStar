@@ -107,7 +107,6 @@ public class Testapp extends Application {
 				e3.rotate(1);
 				e4.rotate(1);
 
-				e2.scale(0.5);
 			}
 
 		};
