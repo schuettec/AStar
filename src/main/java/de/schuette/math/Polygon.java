@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
 
 /**
@@ -20,7 +19,7 @@ public class Polygon implements Shape, Cloneable {
 	/**
 	 * Holds the list of {@link Line}s making up the collision hull polygon.
 	 * Note: After every modification of the list call
-	 * {@link Collision#sortEntityPoints(List)} to make sure the points are
+	 * {@link Math2D#sortEntityPoints(List)} to make sure the points are
 	 * ordered as polygon with non-crossing lines.
 	 */
 	protected List<EntityPoint> entityPoints;
@@ -36,13 +35,13 @@ public class Polygon implements Shape, Cloneable {
 			this.entityPoints.add(p.clone());
 		}
 
-		Collision.sortEntityPoints(this.entityPoints);
+		Math2D.sortEntityPoints(this.entityPoints);
 	}
 
 	public Polygon(List<EntityPoint> entityPoints) {
 		this.entityPoints = new LinkedList<EntityPoint>();
 		this.entityPoints.addAll(entityPoints);
-		Collision.sortEntityPoints(this.entityPoints);
+		Math2D.sortEntityPoints(this.entityPoints);
 	}
 
 	public List<EntityPoint> getEntityPoints() {

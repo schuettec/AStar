@@ -8,7 +8,7 @@ import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
-import de.schuette.world.skills.Entity;
+import de.schuette.world.Map;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -63,12 +63,8 @@ public class Testapp extends Application {
 				new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
 		e4.setScale(65);
 
-		List<Entity> map = new LinkedList<>();
-		map.add(user);
-		map.add(e1);
-		map.add(e2);
-		map.add(e3);
-		map.add(e4);
+		Map map = new Map();
+		map.addEntity(user, e1, e2, e3, e4);
 
 		sceneContent.getChildren().addAll(user, e1, e2, e3, e4);
 
@@ -80,25 +76,26 @@ public class Testapp extends Application {
 			public void handle(long now) {
 				synchronizeEntities(sceneContent);
 
-				List<Point> detectCollision = null;
+				map.update();
 
 				// Detect full collision set to show them all
-				detectCollision = Collision.detectCollision(map, true);
+				List<Collision> detectCollision = map.getCollisions();
 
-				for (Point p : detectCollision) {
+				for (Collision collision : detectCollision) {
 
-					Circle c = new Circle(5);
-					c.setFill(Color.RED);
-					c.setTranslateX(p.x);
-					c.setTranslateY(p.y);
-					sceneContent.getChildren().add(c);
-					Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
-							new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
-					timeline.setOnFinished(e -> {
-						sceneContent.getChildren().remove(c);
-					});
-					timeline.play();
-
+					for (Point p : collision.getPoints()) {
+						Circle c = new Circle(5);
+						c.setFill(Color.RED);
+						c.setTranslateX(p.x);
+						c.setTranslateY(p.y);
+						sceneContent.getChildren().add(c);
+						Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10),
+								new KeyValue(c.opacityProperty(), 100), new KeyValue(c.opacityProperty(), 0)));
+						timeline.setOnFinished(e -> {
+							sceneContent.getChildren().remove(c);
+						});
+						timeline.play();
+					}
 				}
 
 				// Animate

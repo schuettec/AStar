@@ -284,4 +284,41 @@ public class Math2D {
 		return rect;
 	}
 
+	/**
+	 * Sorts the specified list of points so that the points connected with
+	 * lines in the order the list specified result in a polygon with non
+	 * crossing lines.
+	 * 
+	 * @param points
+	 */
+	public static void sortEntityPoints(List<EntityPoint> points) {
+		if (points.size() == 0)
+			return;
+	
+		for (int i = 1; i < points.size(); i++) {
+			EntityPoint current = points.get(i - 1);
+			List<EntityPoint> subListView = points.subList(i, points.size());
+			EntityPoint nextPoint = getPointNextTo(current, subListView);
+			points.remove(nextPoint);
+			points.add(i, nextPoint);
+		}
+	}
+
+	public static double[] pqFormula(double pP, double pQ) {
+		double diskriminante;
+		diskriminante = (pP / 2.0) * (pP / 2.0) - pQ;
+		if (diskriminante >= 0) {
+			double x1, x2;
+			x1 = -(pP / 2) + Math.sqrt(diskriminante);
+			x2 = -(pP / 2) - Math.sqrt(diskriminante);
+			if (x1 == x2) {
+				return new double[] { x2 };
+			} else {
+				return new double[] { x1, x2 };// Was x1, x2
+			}
+		} else {
+			return new double[] {};
+		}
+	}
+
 }
