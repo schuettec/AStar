@@ -1,19 +1,10 @@
 package de.schuette.world.skills;
 
-import java.util.List;
-
-import de.schuette.math.Point;
+import de.schuette.math.Shape;
 
 /**
  * Defines the minimum amount of methods an obstacle must support to detect a
- * collision. There are two kinds of obstacles:
- * <ul>
- * <li>Polygon obstacles: Consist of a polygon that represents the collision
- * bounds. Always represented by a set of lines.</li>
- * <li>Other obstacles: A circle for example is not represented by a set of
- * lines. This kind of obstacles must use another strategy to implement
- * {@link #detectCollision(Obstacle)}.</li>
- * </ul>
+ * collision.
  * 
  * @author schuettec
  *
@@ -21,14 +12,11 @@ import de.schuette.math.Point;
 public interface Obstacle extends Entity {
 
 	/**
-	 * Checks this entity and the specified entity for collisions.
-	 * 
-	 * @param obstacle
-	 *            The other entity.
-	 * @return Returns the list of points in world coordinates if there is a
-	 *         collision. Otherwise <code>null</code> is returned.
+	 * @return Returns the {@link Shape} representing the collision shape of
+	 *         this Entity. Implementations must make sure that the
+	 *         {@link Shape} is translated to world coordinates and reflects all
+	 *         properties like scaling etc.
 	 */
-	public List<Point> detectCollision(Obstacle obstacle, boolean all);
-
+	public Shape getCollisionShape();
 
 }

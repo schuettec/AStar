@@ -1,14 +1,12 @@
 package de.schuette.world;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-import de.schuette.math.Line;
 import de.schuette.math.Point;
+import de.schuette.math.Polygon;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
-import de.schuette.world.skills.PolygonObstacle;
 
 /**
  * Represents an abstract obstacle in the world. This is the most possible
@@ -27,57 +25,29 @@ import de.schuette.world.skills.PolygonObstacle;
  * 
  * @author schuettec
  */
-public class AbstractPolygonObstacle extends AbstractEntity implements PolygonObstacle {
+public class AbstractPolygonObstacle extends AbstractEntity implements Obstacle {
 
-	public AbstractPolygonObstacle() {
-		super();
-	}
-
-	public AbstractPolygonObstacle(Point worldCoordinates) {
-		super(worldCoordinates);
-	}
+	protected Polygon polygon;
 
 	public AbstractPolygonObstacle(Point worldCoordinates, EntityPoint... entityPoints) {
 		super(worldCoordinates);
+		this.polygon = new Polygon(entityPoints);
 	}
 
-	@Override
-	public List<Point> detectCollision(Obstacle obstacle, boolean all) {
-		return Collision.detectCollision(this, obstacle, all);
-	}
+	public AbstractPolygonObstacle(Point worldCoordinates, Point... points) {
+		super(worldCoordinates);
 
-	@Override
-	public List<Line> getHullPolygon(boolean worldCoordinates) {
-		return Collision.getHullPolygon(getHullPoints(worldCoordinates));
-	}
-
-	@Override
-	public List<EntityPoint> getHullPoints(boolean worldCoordinates) {
-		if (worldCoordinates) {
-			return getWorldView(entityPoints);
-		} else {
-			return Collections.unmodifiableList(entityPoints);
+		List<EntityPoint> entityPoints = new ArrayList<EntityPoint>(points.length);
+		for (Point p : points) {
+			entityPoints.add(new EntityPoint(p));
 		}
-	}
 
-	private List<EntityPoint> getWorldView(List<EntityPoint> points) {
-		// Rotate to the current state of the entity.
-		List<EntityPoint> clone = Collision.clone(points);
-		// Rotate to the current state of the entity.
-		Collision.rotate(clone, this.degrees);
-		// Translate to world coordinates
-		Collision.scale(clone, scaling);
-		// Translate to world coordinates
-		Collision.translate(clone, worldCoordinates);
-
-		return clone;
+		this.polygon = new Polygon(entityPoints);
 	}
 
 	@Override
-	public void setHullPoints(EntityPoint[] entityPoints) {
-		this.entityPoints.clear();
-		this.entityPoints.addAll(Arrays.asList(entityPoints));
-		Collision.sortEntityPoints(this.entityPoints);
+	public Polygon getCollisionShape() {
+		return polygon.clone().scale(scaling).rotate(degrees).translate(worldCoordinates);
 	}
 
 }

@@ -2,17 +2,14 @@ package de.schuette.integration;
 
 import java.util.List;
 
-import de.schuette.math.Line;
 import de.schuette.math.Point;
+import de.schuette.world.AbstractEntity;
 import de.schuette.world.AbstractPolygonObstacle;
-import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
-import de.schuette.world.skills.Obstacle;
-import de.schuette.world.skills.PolygonObstacle;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class PolygonEntity extends Polygon implements JFxEntity, PolygonObstacle {
+public class PolygonEntity extends Polygon implements JFxEntity {
 
 	protected AbstractPolygonObstacle entity;
 
@@ -34,15 +31,14 @@ public class PolygonEntity extends Polygon implements JFxEntity, PolygonObstacle
 
 	@Override
 	public void synchronize() {
+		de.schuette.math.Polygon collisionShape = entity.getCollisionShape();
 		// Synchronize points
 		getPoints().clear();
-		setTranslateX(getPosition().x);
-		setTranslateY(getPosition().y);
+		setTranslateX(0);
+		setTranslateY(0);
 		// Do not use the world view here: Otherwise the polygon is always
 		// interpreted to have a size measured at 0|0.
-		List<EntityPoint> entityPoints = Collision.clone(entity.getHullPoints(false));
-		Collision.scale(entityPoints, getScale());
-		Collision.rotate(entityPoints, entity.getDegrees());
+		List<EntityPoint> entityPoints = collisionShape.getEntityPoints();
 		for (EntityPoint e : entityPoints) {
 			getPoints().addAll(e.getCoordinates().getX(), e.getCoordinates().getY());
 		}
@@ -77,18 +73,8 @@ public class PolygonEntity extends Polygon implements JFxEntity, PolygonObstacle
 	}
 
 	@Override
-	public void scale(double scale) {
-		entity.scale(scale);
-	}
-
-	@Override
 	public double getScale() {
 		return entity.getScale();
-	}
-
-	@Override
-	public void rotate(double degrees) {
-		entity.rotate(degrees);
 	}
 
 	@Override
@@ -96,24 +82,20 @@ public class PolygonEntity extends Polygon implements JFxEntity, PolygonObstacle
 		return entity.getDegrees();
 	}
 
-	@Override
-	public List<Point> detectCollision(Obstacle obstacle, boolean all) {
-		return entity.detectCollision(obstacle,all);
+	public AbstractEntity rotate(double degrees) {
+		return entity.rotate(degrees);
 	}
 
-	@Override
-	public List<Line> getHullPolygon(boolean worldCoordinates) {
-		return entity.getHullPolygon(worldCoordinates);
+	public AbstractEntity translate(Point translation) {
+		return entity.translate(translation);
 	}
 
-	@Override
-	public List<EntityPoint> getHullPoints(boolean worldCoordinates) {
-		return entity.getHullPoints(worldCoordinates);
+	public AbstractEntity scale(double scaleFactor) {
+		return entity.scale(scaleFactor);
 	}
 
-	@Override
-	public void setHullPoints(EntityPoint[] entityPoints) {
-		entity.setHullPoints(entityPoints);
+	public de.schuette.math.Polygon getCollisionShape() {
+		return entity.getCollisionShape();
 	}
 
 }

@@ -1,16 +1,16 @@
 package de.schuette.world;
 
 import de.schuette.math.Point;
+import de.schuette.math.Shape;
 import de.schuette.world.skills.Entity;
 
 /**
  * This class defines the most abstract implementation of an {@link Entity}.
- * This class basically manages the position attribute.
  * 
  * @author schuettec
  *
  */
-public class AbstractEntity implements Entity {
+public abstract class AbstractEntity implements Entity, Shape {
 	/**
 	 * Holds the position of this entity in world coordinates.
 	 */
@@ -22,9 +22,9 @@ public class AbstractEntity implements Entity {
 	protected double degrees;
 
 	/**
-	 * Holds the current scaling factor.
+	 * Holds the scaling factor of this entity.
 	 */
-	protected double scaling = 1;
+	protected double scaling;
 
 	public AbstractEntity() {
 		this(new Point(0, 0));
@@ -63,23 +63,31 @@ public class AbstractEntity implements Entity {
 	}
 
 	@Override
-	public void scale(double scale) {
-		this.scaling += scaling;
-	}
-
-	@Override
 	public double getScale() {
 		return this.scaling;
 	}
 
 	@Override
-	public void rotate(double degrees) {
-		this.degrees += degrees;
+	public double getDegrees() {
+		return degrees;
 	}
 
 	@Override
-	public double getDegrees() {
-		return degrees;
+	public AbstractEntity rotate(double degrees) {
+		this.degrees += degrees;
+		return this;
+	}
+
+	@Override
+	public AbstractEntity translate(Point translation) {
+		this.worldCoordinates.translate(translation);
+		return this;
+	}
+
+	@Override
+	public AbstractEntity scale(double scaleFactor) {
+		this.scaling += scaleFactor;
+		return this;
 	}
 
 }

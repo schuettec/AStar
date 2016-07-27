@@ -41,10 +41,9 @@ public class Testapp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		Pane sceneContent = new Pane();
-//		Pane debugContent = new Pane();
-//		StackPane stack = new StackPane(sceneContent, debugContent);
-//		DEBUG = debugContent;
-
+		// Pane debugContent = new Pane();
+		// StackPane stack = new StackPane(sceneContent, debugContent);
+		// DEBUG = debugContent;
 
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
 		user.setScale(65);
@@ -60,7 +59,8 @@ public class Testapp extends Application {
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e3.setScale(65);
 		PolygonEntity e4 = new PolygonEntity(new Point(150, 150), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
-				new EntityPoint(200d, 1d), new EntityPoint(235d, 1d), new EntityPoint(265d, 1d), new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
+				new EntityPoint(200d, 1d), new EntityPoint(235d, 1d), new EntityPoint(265d, 1d),
+				new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
 		e4.setScale(65);
 
 		List<Entity> map = new LinkedList<>();
@@ -83,8 +83,8 @@ public class Testapp extends Application {
 				List<Point> detectCollision = null;
 
 				// Detect full collision set to show them all
-				detectCollision = Collision.detectCollision(map,  true);
-				
+				detectCollision = Collision.detectCollision(map, true);
+
 				for (Point p : detectCollision) {
 
 					Circle c = new Circle(5);
@@ -106,6 +106,8 @@ public class Testapp extends Application {
 				e2.rotate(1);
 				e3.rotate(1);
 				e4.rotate(1);
+
+				e2.scale(0.5);
 			}
 
 		};
@@ -139,16 +141,14 @@ public class Testapp extends Application {
 		// });
 		// t.start();
 
-		 sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new
-		 EventHandler<MouseEvent>() {
-		 @Override
-		 public void handle(MouseEvent mouseEvent) {
-		 user.setPosition(mouseEvent.getX(), mouseEvent.getY());
-		 mouseEvent.consume();
-		
-		
-		 }
-		 });
+		sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				user.setPosition(mouseEvent.getX(), mouseEvent.getY());
+				mouseEvent.consume();
+
+			}
+		});
 
 		Scene scene = new Scene(sceneContent, 1000, 1000);
 		primaryStage.setScene(scene);

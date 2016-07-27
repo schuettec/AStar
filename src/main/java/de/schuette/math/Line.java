@@ -7,7 +7,7 @@ package de.schuette.math;
  * @author Chris
  *
  */
-public class Line {
+public class Line implements Shape, Cloneable {
 
 	private Point x1, x2;
 	private boolean parallelY = false;
@@ -221,5 +221,38 @@ public class Line {
 		}
 
 		return "g(x) = " + this.getM() + " * x + " + this.getB();
+	}
+
+	@Override
+	public Line clone() {
+		return new Line(x1.clone(), x2.clone());
+	}
+
+	@Override
+	public Line rotate(double degrees) {
+		Point center = Math2D.getMittelpunkt(x1, x2);
+		Point newX1 = Math2D.getCircle(center, Math2D.getEntfernung(x1, center), degrees);
+		Point newX2 = Math2D.getCircle(center, Math2D.getEntfernung(x2, center), degrees);
+		x1.setLocation(newX1);
+		x2.setLocation(newX2);
+		return this;
+	}
+
+	@Override
+	public Line translate(Point translation) {
+		x1.translate(translation);
+		x2.translate(translation);
+		return this;
+	}
+
+	@Override
+	public Line scale(double scaleFactor) {
+		Point center = Math2D.getMittelpunkt(x1, x2);
+		double angle = Math2D.getAngle(center, x1);
+		Point newX1 = Math2D.getCircle(center, Math2D.getEntfernung(x1, center), angle);
+		Point newX2 = Math2D.getCircle(center, Math2D.getEntfernung(x2, center), angle + 180);
+		x1.setLocation(newX1);
+		x2.setLocation(newX2);
+		return this;
 	}
 }

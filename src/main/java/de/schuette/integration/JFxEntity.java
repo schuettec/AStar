@@ -1,6 +1,7 @@
 package de.schuette.integration;
 
 import de.schuette.world.skills.Entity;
+import de.schuette.world.skills.Obstacle;
 import javafx.scene.Node;
 
 /**
@@ -10,7 +11,7 @@ import javafx.scene.Node;
  * @author schuettec
  *
  */
-public interface JFxEntity extends Entity {
+public interface JFxEntity extends Entity, Obstacle {
 
 	/**
 	 * This method is called by the framework to synchronize the JavaFX

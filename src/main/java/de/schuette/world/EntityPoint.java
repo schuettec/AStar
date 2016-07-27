@@ -1,9 +1,8 @@
 package de.schuette.world;
 
-import java.io.Serializable;
-
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
+import de.schuette.math.Shape;
 import de.schuette.world.skills.Obstacle;
 
 /**
@@ -13,14 +12,9 @@ import de.schuette.world.skills.Obstacle;
  * @author schuettec
  *
  */
-public class EntityPoint implements Serializable {
+public class EntityPoint implements Shape {
 
 	private static final Point ORIGIN = new Point(0, 0);
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private double radius = 0;
 
@@ -39,7 +33,7 @@ public class EntityPoint implements Serializable {
 	}
 
 	public EntityPoint(Point point) {
-		coordinates = point;
+		coordinates = point.clone();
 		setByPosition(coordinates);
 	}
 
@@ -75,32 +69,29 @@ public class EntityPoint implements Serializable {
 
 	}
 
-	/**
-	 * Rotates this point by the specified amount of degrees. The internal state
-	 * is updates.
-	 * 
-	 * @param degrees
-	 *            The amount of degrees to rotate.
-	 */
-	public void rotate(final double degrees) {
-		setByCircle(this.degrees + degrees, this.radius);
+	@Override
+	public EntityPoint clone() {
+		return new EntityPoint(degrees, radius);
 	}
 
-	/**
-	 * Translates this point by adding the coordinates of the specified
-	 * {@link Point}.
-	 * 
-	 * @param translation
-	 *            The point to add.
-	 */
-	public void translate(Point translation) {
+	@Override
+	public EntityPoint rotate(double degrees) {
+		setByCircle(this.degrees + degrees, this.radius);
+		return this;
+	}
+
+	@Override
+	public EntityPoint translate(Point translation) {
 		Point newPoint = new Point(coordinates);
 		newPoint.translate(translation.x, translation.y);
 		setByPosition(newPoint);
+		return this;
 	}
 
-	public void scale(double scale) {
-		setByCircle(this.degrees, this.radius * scale);
+	@Override
+	public EntityPoint scale(double scaleFactor) {
+		setByCircle(this.degrees, this.radius * scaleFactor);
+		return this;
 	}
 
 }

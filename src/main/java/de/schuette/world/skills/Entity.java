@@ -38,17 +38,9 @@ public interface Entity {
 	public void setScale(double scale);
 
 	/**
-	 * @param scale
-	 *            Returns the scaling factor.
+	 * @return Returns the scaling factor.
 	 */
 	public double getScale();
-
-	/**
-	 * @param scale
-	 *            Scales this entity by adding the amount of scaling factor to
-	 *            the current scaling.
-	 */
-	public void scale(double scale);
 
 	/**
 	 * This method set the degrees of the entity rotation.
@@ -63,12 +55,4 @@ public interface Entity {
 	 */
 	public double getDegrees();
 
-	/**
-	 * This method rotates the {@link Entity} by adding the specific amount of
-	 * degrees to the current entity rotation.
-	 * 
-	 * @param degrees
-	 *            The degrees to add to the entities rotation.
-	 */
-	public void rotate(double degrees);
 }

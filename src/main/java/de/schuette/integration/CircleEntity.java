@@ -1,15 +1,12 @@
 package de.schuette.integration;
 
-import java.util.List;
-
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
-import de.schuette.world.skills.CircleObstacle;
-import de.schuette.world.skills.Obstacle;
+import de.schuette.world.AbstractEntity;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class CircleEntity extends Circle implements JFxEntity, CircleObstacle {
+public class CircleEntity extends Circle implements JFxEntity {
 
 	protected AbstractCircleObstacle entity;
 
@@ -31,9 +28,10 @@ public class CircleEntity extends Circle implements JFxEntity, CircleObstacle {
 
 	@Override
 	public void synchronize() {
-		setRadius(entity.getRadius());
-		setTranslateX(entity.getPosition().x);
-		setTranslateY(entity.getPosition().y);
+		de.schuette.math.Circle collisionShape = entity.getCollisionShape();
+		setRadius(collisionShape.getRadius());
+		setTranslateX(collisionShape.getPosition().x);
+		setTranslateY(collisionShape.getPosition().y);
 	}
 
 	@Override
@@ -65,18 +63,8 @@ public class CircleEntity extends Circle implements JFxEntity, CircleObstacle {
 	}
 
 	@Override
-	public void scale(double scale) {
-		entity.scale(scale);
-	}
-
-	@Override
 	public double getScale() {
 		return entity.getScale();
-	}
-
-	@Override
-	public void rotate(double degrees) {
-		entity.rotate(degrees);
 	}
 
 	@Override
@@ -84,10 +72,20 @@ public class CircleEntity extends Circle implements JFxEntity, CircleObstacle {
 		return entity.getDegrees();
 	}
 
-	@Override
-	public List<Point> detectCollision(Obstacle obstacle, boolean all) {
-		return entity.detectCollision(obstacle, all);
+	public AbstractEntity rotate(double degrees) {
+		return entity.rotate(degrees);
 	}
 
+	public AbstractEntity translate(Point translation) {
+		return entity.translate(translation);
+	}
+
+	public AbstractEntity scale(double scaleFactor) {
+		return entity.scale(scaleFactor);
+	}
+
+	public de.schuette.math.Circle getCollisionShape() {
+		return entity.getCollisionShape();
+	}
 
 }

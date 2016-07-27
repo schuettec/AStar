@@ -9,17 +9,16 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import de.schuette.integration.Testapp;
+import de.schuette.math.Circle;
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
-import de.schuette.world.skills.CircleObstacle;
 import de.schuette.world.skills.Entity;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 public class Algorithm {
 
-	public static List<Point> findPath(CircleObstacle entity, Point target, List<Entity> map, double stepRadius) {
+	public static List<Point> findPath(Circle entity, Point target, List<Entity> map, double stepRadius) {
 
 		PriorityQueue<Point> openList = new PriorityQueue<Point>(new Comparator<Point>() {
 			@Override
@@ -45,7 +44,7 @@ public class Algorithm {
 				public void run() {
 					Testapp.DEBUG.getChildren().clear();
 					for (Point p : openList) {
-						Circle c = new Circle(5);
+						javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
 						c.setFill(Color.YELLOW);
 						c.setTranslateX(p.x);
 						c.setTranslateY(p.y);
@@ -95,7 +94,7 @@ public class Algorithm {
 
 	}
 
-	private static double heuristic(Point current, Point successor, Entity start, Point end, List<Entity> map) {
+	private static double heuristic(Point current, Point successor, Circle start, Point end, List<Entity> map) {
 
 		// {
 		// Map copy = map.clone();
@@ -122,14 +121,14 @@ public class Algorithm {
 		return Math2D.getEntfernung(successor, end);
 	}
 
-	private static void expandNode(Point current, Entity start, Point end, List<Entity> map,
+	private static void expandNode(Point current, Circle start, Point end, List<Entity> map,
 			PriorityQueue<Point> openList, Set<Point> closedList, double radius) {
 
 		List<Point> successors = new ArrayList<>();
 		for (int i = 0; i <= 315; i += 45) {
 			Point circle = Math2D.getCircle(current, radius, i);
 			// Check for collision:
-			
+
 			successors.add(circle);
 		}
 

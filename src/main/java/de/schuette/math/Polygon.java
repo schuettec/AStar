@@ -1,5 +1,6 @@
 package de.schuette.math;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,7 @@ import de.schuette.world.EntityPoint;
  * @author Chris
  *
  */
-public class Polygon {
+public class Polygon implements Shape, Cloneable {
 
 	/**
 	 * Holds the list of {@link Line}s making up the collision hull polygon.
@@ -30,7 +31,17 @@ public class Polygon {
 	}
 
 	public Polygon(EntityPoint... entityPoints) {
+		this.entityPoints = new ArrayList<EntityPoint>(entityPoints.length);
+		for (EntityPoint p : entityPoints) {
+			this.entityPoints.add(p.clone());
+		}
+
+		Collision.sortEntityPoints(this.entityPoints);
+	}
+
+	public Polygon(List<EntityPoint> entityPoints) {
 		this.entityPoints = new LinkedList<EntityPoint>();
+		this.entityPoints.addAll(entityPoints);
 		Collision.sortEntityPoints(this.entityPoints);
 	}
 
@@ -38,4 +49,62 @@ public class Polygon {
 		return Collections.unmodifiableList(entityPoints);
 	}
 
+	/**
+	 * @return Returns the list of {@link Line}s that represents this
+	 *         {@link Polygon}. The lines are returned in the correct order.
+	 *         Manipulations on the returned {@link Line}s do not modify this
+	 *         polygon.
+	 */
+	public List<Line> getLines() {
+		final List<Line> lineList = new ArrayList<Line>();
+
+		if (entityPoints.size() > 0) {
+			for (int i = 1; i < entityPoints.size(); i++) {
+				EntityPoint start = entityPoints.get(i);
+				EntityPoint end = entityPoints.get(i - 1);
+				lineList.add(new Line(start.getCoordinates(), end.getCoordinates()));
+			}
+
+			EntityPoint start = entityPoints.get(0);
+			EntityPoint end = entityPoints.get(entityPoints.size() - 1);
+			lineList.add(new Line(start.getCoordinates(), end.getCoordinates()));
+		}
+
+		return lineList;
+
+	}
+
+	@Override
+	public Polygon clone() {
+		List<EntityPoint> clone = new LinkedList<>();
+		for (EntityPoint e : entityPoints) {
+			EntityPoint n = new EntityPoint(e.getDegrees(), e.getRadius());
+			clone.add(n);
+		}
+		return new Polygon(clone);
+	}
+
+	@Override
+	public Polygon rotate(double degrees) {
+		for (EntityPoint point : entityPoints) {
+			point.rotate(degrees);
+		}
+		return this;
+	}
+
+	@Override
+	public Polygon translate(Point translation) {
+		for (EntityPoint point : entityPoints) {
+			point.translate(translation);
+		}
+		return this;
+	}
+
+	@Override
+	public Polygon scale(double scaleFactor) {
+		for (EntityPoint point : entityPoints) {
+			point.scale(scaleFactor);
+		}
+		return this;
+	}
 }

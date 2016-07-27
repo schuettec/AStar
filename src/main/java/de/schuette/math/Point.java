@@ -1,6 +1,6 @@
 package de.schuette.math;
 
-public class Point {
+public class Point implements Shape, Cloneable {
 
 	public Object userObject;
 
@@ -30,11 +30,6 @@ public class Point {
 		this.y += y;
 	}
 
-	public void translate(Point p) {
-		this.x += p.x;
-		this.y += p.y;
-	}
-
 	public double getX() {
 		return x;
 	}
@@ -51,11 +46,25 @@ public class Point {
 		this.y = y;
 	}
 
+	/**
+	 * Sets the location of this {@link Point}.
+	 * 
+	 * @param x
+	 *            The new x coordinate of this {@link Point}.
+	 * @param y
+	 *            The new y coordinate of this {@link Point}.
+	 */
 	public void setLocation(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * Sets the location of this {@link Point}.
+	 * 
+	 * @param p
+	 *            The new location of this {@link Point}.
+	 */
 	public void setLocation(Point p) {
 		this.x = p.x;
 		this.y = p.y;
@@ -96,6 +105,36 @@ public class Point {
 		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Point clone() {
+		return new Point(x, y);
+	}
+
+	/**
+	 * This implementation does nothing, because a {@link Point} cannot be
+	 * rotated.
+	 */
+	@Override
+	public Point rotate(double degrees) {
+		return this;
+	}
+
+	@Override
+	public Point translate(Point translation) {
+		this.x += translation.x;
+		this.y += translation.y;
+		return this;
+	}
+
+	/**
+	 * This implementation does nothing, because a {@link Point} cannot be
+	 * scaled.
+	 */
+	@Override
+	public Point scale(double scaleFactor) {
+		return this;
 	}
 
 }

@@ -1,9 +1,7 @@
 package de.schuette.world;
 
-import java.util.List;
-
+import de.schuette.math.Circle;
 import de.schuette.math.Point;
-import de.schuette.world.skills.CircleObstacle;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
 
@@ -24,40 +22,25 @@ import de.schuette.world.skills.Obstacle;
  * 
  * @author schuettec
  */
-public class AbstractCircleObstacle extends AbstractEntity implements CircleObstacle {
+public class AbstractCircleObstacle extends AbstractEntity implements Obstacle {
 
 	/**
-	 * Holds the radius of the collision circle.
+	 * Holds the collision shape of this entity.
 	 */
-	protected double radius;
-
-	public AbstractCircleObstacle() {
-		super();
-	}
-
-	public AbstractCircleObstacle(Point worldCoordinates) {
-		super(worldCoordinates);
-	}
+	protected Circle circle;
 
 	public AbstractCircleObstacle(Point worldCoordinates, double radius) {
 		super(worldCoordinates);
-		setRadius(radius);
+		this.circle = new Circle(new Point(0, 0), radius);
 	}
 
 	@Override
-	public List<Point> detectCollision(Obstacle obstacle,  boolean all) {
-		return Collision.detectCollision(this, obstacle, all);
+	public Circle getCollisionShape() {
+		return circle.clone().scale(scaling).rotate(degrees).translate(worldCoordinates);
 	}
 
-
-	@Override
 	public double getRadius() {
-		return radius * scaling;
-	}
-
-	@Override
-	public void setRadius(double radius) {
-		this.radius = radius;
+		return circle.getRadius();
 	}
 
 }

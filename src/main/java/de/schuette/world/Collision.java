@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.schuette.math.Circle;
 import de.schuette.math.Line;
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
-import de.schuette.world.skills.CircleObstacle;
+import de.schuette.math.Polygon;
+import de.schuette.math.Shape;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Obstacle;
-import de.schuette.world.skills.PolygonObstacle;
 
 /**
  * A public util class with methods to perform a collision detection.
@@ -20,10 +21,9 @@ import de.schuette.world.skills.PolygonObstacle;
  */
 public class Collision {
 
-
 	public static List<Point> detectCollision(List<Entity> map, boolean all) {
 		List<Point> detectCollision = new LinkedList<>();
-		
+
 		for (Entity c1 : new ArrayList<>(map)) {
 			if (!(c1 instanceof Obstacle)) {
 				continue;
@@ -35,11 +35,11 @@ public class Collision {
 				}
 				if (c1 == c2)
 					continue;
-				
+
 				Obstacle o1 = (Obstacle) c1;
 				Obstacle o2 = (Obstacle) c2;
 				{
-					detectCollision.addAll(o1.detectCollision(o2, all));
+					detectCollision.addAll(detectCollision(o1, o2, all));
 				}
 
 			}
@@ -47,26 +47,27 @@ public class Collision {
 		return detectCollision;
 	}
 
-
-	public static List<Point> detectCollision(Obstacle o1, Obstacle o2, boolean all) {
-		if (o1 instanceof PolygonObstacle && o2 instanceof PolygonObstacle) {
-			return _detectCollision((PolygonObstacle) o1, (PolygonObstacle) o2, all);
-		} else if (o1 instanceof CircleObstacle && o2 instanceof CircleObstacle) {
-			return _detectCollision((CircleObstacle) o1, (CircleObstacle) o2, all);
-		} else if (o1 instanceof CircleObstacle && o2 instanceof PolygonObstacle) {
-			return _detectCollision((CircleObstacle) o1, (PolygonObstacle) o2, all);
+	public static List<Point> detectCollision(Obstacle e1, Obstacle e2, boolean all) {
+		Shape o1 = e1.getCollisionShape();
+		Shape o2 = e2.getCollisionShape();
+		if (o1 instanceof Polygon && o2 instanceof Polygon) {
+			return _detectCollision((Polygon) o1, (Polygon) o2, all);
+		} else if (o1 instanceof Circle && o2 instanceof Circle) {
+			return _detectCollision((Circle) o1, (Circle) o2, all);
+		} else if (o1 instanceof Circle && o2 instanceof Polygon) {
+			return _detectCollision((Circle) o1, (Polygon) o2, all);
 		} else {
-			return _detectCollision((CircleObstacle) o2, (PolygonObstacle) o1, all);
+			return _detectCollision((Circle) o2, (Polygon) o1, all);
 		}
 	}
 
-	private static List<Point> _detectCollision(CircleObstacle p1, CircleObstacle p2, boolean all) {
+	private static List<Point> _detectCollision(Circle p1, Circle p2, boolean all) {
 		throw new UnsupportedOperationException();
 	}
 
-	private static List<Point> _detectCollision(CircleObstacle p1, PolygonObstacle p2, boolean all) {
+	private static List<Point> _detectCollision(Circle p1, Polygon p2, boolean all) {
 		List<Point> collisions = new LinkedList<>();
-		List<Line> h2 = p2.getHullPolygon(true);
+		List<Line> h2 = p2.getLines();
 		for (Line l2 : h2) {
 			// Kreisgleichung:
 			// (x - xM)² + ([m * x + n] - yM)² = r²
@@ -100,10 +101,10 @@ public class Collision {
 		return collisions;
 	}
 
-	private static List<Point> _detectCollision(PolygonObstacle p1, PolygonObstacle p2, boolean all) {
+	private static List<Point> _detectCollision(Polygon p1, Polygon p2, boolean all) {
 		List<Point> collisions = new LinkedList<>();
-		List<Line> h1 = p1.getHullPolygon(true);
-		List<Line> h2 = p2.getHullPolygon(true);
+		List<Line> h1 = p1.getLines();
+		List<Line> h2 = p2.getLines();
 		for (Line l1 : h1) {
 			for (Line l2 : h2) {
 				Point intersection = l1.intersects(l2);
@@ -136,31 +137,6 @@ public class Collision {
 	}
 
 	/**
-	 * This method calculates the polygon from the specified list of entity
-	 * points.
-	 * 
-	 * @param points
-	 * @return Returns the list of lines that make up the polygon.
-	 */
-	public static List<Line> getHullPolygon(List<EntityPoint> sortedPoints) {
-		final List<Line> lineList = new ArrayList<Line>();
-
-		if (sortedPoints.size() > 0) {
-			for (int i = 1; i < sortedPoints.size(); i++) {
-				EntityPoint start = sortedPoints.get(i);
-				EntityPoint end = sortedPoints.get(i - 1);
-				lineList.add(new Line(start.getCoordinates(), end.getCoordinates()));
-			}
-
-			EntityPoint start = sortedPoints.get(0);
-			EntityPoint end = sortedPoints.get(sortedPoints.size() - 1);
-			lineList.add(new Line(start.getCoordinates(), end.getCoordinates()));
-		}
-
-		return lineList;
-	}
-
-	/**
 	 * Sorts the specified list of points so that the points connected with
 	 * lines in the order the list specified result in a polygon with non
 	 * crossing lines.
@@ -177,33 +153,6 @@ public class Collision {
 			EntityPoint nextPoint = Math2D.getPointNextTo(current, subListView);
 			points.remove(nextPoint);
 			points.add(i, nextPoint);
-		}
-	}
-
-	public static void translate(List<EntityPoint> entityPoints, Point worldCoordinates) {
-		for (EntityPoint point : entityPoints) {
-			point.translate(worldCoordinates);
-		}
-	}
-
-	public static void rotate(List<EntityPoint> entityPoints, double degrees) {
-		for (EntityPoint point : entityPoints) {
-			point.rotate(degrees);
-		}
-	}
-
-	public static List<EntityPoint> clone(List<EntityPoint> points) {
-		List<EntityPoint> clone = new LinkedList<>();
-		for (EntityPoint e : points) {
-			EntityPoint n = new EntityPoint(e.getDegrees(), e.getRadius());
-			clone.add(n);
-		}
-		return clone;
-	}
-
-	public static void scale(List<EntityPoint> points, double scaling) {
-		for (EntityPoint point : points) {
-			point.scale(scaling);
 		}
 	}
 
