@@ -44,16 +44,18 @@ public class Circle implements Shape, Cloneable {
 		return position.clone();
 	}
 
-	public void setPosition(Point position) {
+	public Circle setPosition(Point position) {
 		this.position.setLocation(position);
+		return this;
 	}
 
 	public double getRadius() {
 		return radius;
 	}
 
-	public void setRadius(double radius) {
+	public Circle setRadius(double radius) {
 		this.radius = radius;
+		return this;
 	}
 
 }

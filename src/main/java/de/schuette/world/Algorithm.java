@@ -132,10 +132,10 @@ public class Algorithm {
 			Point circle = Math2D.getCircle(current, radius, i);
 			// Create collision shape: A line from current point to the next
 			// step.
-			Line line = new Line(current, circle);
+			Circle stepShape = start.getCollisionShape().clone().setPosition(circle);
 			Set<Entity> ignore = new HashSet<>();
 			ignore.add(start);
-			boolean hasCollision = map.hasCollision(line.toPolygon(), ignore, false);
+			boolean hasCollision = map.hasCollision(stepShape, ignore, false);
 			if (!hasCollision) {
 				successors.add(circle);
 			}
