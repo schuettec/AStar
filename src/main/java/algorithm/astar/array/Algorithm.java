@@ -21,18 +21,6 @@ public class Algorithm {
 
 		Node current = null;
 		do {
-
-			// DEBUG LOG
-			// {
-			// Map copy = map.clone();
-			// Node[] array = openList.toArray(new Node[openList.size()]);
-			// Arrays.sort(array);
-			// for (Node n : array) {
-			// copy.set(n.x, n.y, new Type(String.valueOf(n.priority)));
-			// }
-			// System.out.println(copy);
-			// }
-
 			current = openList.poll();
 
 			if (current.isAt(end)) {
@@ -94,29 +82,6 @@ public class Algorithm {
 	}
 
 	private static int heuristic(Node current, Node successor, int[] start, int[] end, Map map) {
-
-		// {
-		// Map copy = map.clone();
-		// System.out.println(copy);
-		// System.out.println();
-		// }
-		// {
-		// Map copy = map.clone();
-		// copy.set(line(current.getCoordinates(), end, copy), new Type("H"));
-		// copy.set(line(current.getCoordinates(), successor.getCoordinates(),
-		// copy), new Type("h"));
-		// System.out.println(copy);
-		// System.out.println();
-		// }
-		// {
-		// Map copy = map.clone();
-		// copy.set(current.getCoordinates(), new Type(String.valueOf("c")));
-		// copy.set(successor.x, successor.y, new
-		// Type(String.valueOf(successor.priority)));
-		// System.out.println(copy);
-		// System.out.println();
-		// }
-
 		return line(successor.getCoordinates(), end).size();
 	}
 
@@ -124,14 +89,6 @@ public class Algorithm {
 			Set<Node> closedList) {
 
 		List<int[]> successors = map.getFreeNeighbours(current.getCoordinates());
-
-		// {
-		// Map copy = map.clone();
-		// copy.set(current.getCoordinates(), new Type("!"));
-		// copy.set(successors, new Type("n"));
-		// System.out.println(copy);
-		// System.out.println();
-		// }
 
 		for (int[] successorCoords : successors) {
 
