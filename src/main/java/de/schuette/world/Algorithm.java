@@ -11,11 +11,9 @@ import java.util.Set;
 import de.schuette.integration.CircleEntity;
 import de.schuette.integration.Testapp;
 import de.schuette.math.Circle;
-import de.schuette.math.Line;
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
 import de.schuette.world.skills.Entity;
-import de.schuette.world.skills.Obstacle;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
@@ -48,7 +46,7 @@ public class Algorithm {
 					Testapp.DEBUG.getChildren().clear();
 					for (Point p : openList) {
 						javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
-						c.setFill(Color.YELLOW);
+						c.setFill(Color.BLUE);
 						c.setTranslateX(p.x);
 						c.setTranslateY(p.y);
 						Testapp.DEBUG.getChildren().add(c);
@@ -62,18 +60,6 @@ public class Algorithm {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			// DEBUG LOG
-			// {
-			// Map copy = map.clone();
-			// Node[] array = openList.toArray(new Node[openList.size()]);
-			// Arrays.sort(array);
-			// for (Node n : array) {
-			// copy.set(n.x, n.y, new Type(String.valueOf(n.priority)));
-			// }
-			// System.out.println(copy);
-			// }
-
 			current = openList.poll();
 
 			if (Math2D.isInCircle(current, target, targetRadius)) {
@@ -94,33 +80,9 @@ public class Algorithm {
 		}
 
 		return path;
-
 	}
 
 	private static double heuristic(Point current, Point successor, CircleEntity start, Point end, Map map) {
-
-		// {
-		// Map copy = map.clone();
-		// System.out.println(copy);
-		// System.out.println();
-		// }
-		// {
-		// Map copy = map.clone();
-		// copy.set(line(current.getCoordinates(), end, copy), new Type("H"));
-		// copy.set(line(current.getCoordinates(), successor.getCoordinates(),
-		// copy), new Type("h"));
-		// System.out.println(copy);
-		// System.out.println();
-		// }
-		// {
-		// Map copy = map.clone();
-		// copy.set(current.getCoordinates(), new Type(String.valueOf("c")));
-		// copy.set(successor.x, successor.y, new
-		// Type(String.valueOf(successor.priority)));
-		// System.out.println(copy);
-		// System.out.println();
-		// }
-
 		return Math2D.getEntfernung(successor, end);
 	}
 
@@ -128,6 +90,7 @@ public class Algorithm {
 			Set<Point> closedList, double radius) {
 
 		List<Point> successors = new ArrayList<>();
+
 		for (int i = 0; i <= 315; i += 45) {
 			Point circle = Math2D.getCircle(current, radius, i);
 			// Create collision shape: A line from current point to the next

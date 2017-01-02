@@ -51,17 +51,17 @@ public class Testapp extends Application {
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
 		user.setScale(65);
 
-		PolygonEntity e1 = new PolygonEntity(new Point(200, 200), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+		PolygonEntity e1 = new PolygonEntity(new Point(300, 300), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e1.setScale(65);
 
-		PolygonEntity e2 = new PolygonEntity(new Point(100, 100), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+		PolygonEntity e2 = new PolygonEntity(new Point(200, 200), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e2.setScale(65);
-		PolygonEntity e3 = new PolygonEntity(new Point(300, 300), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+		PolygonEntity e3 = new PolygonEntity(new Point(400, 400), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e3.setScale(65);
-		PolygonEntity e4 = new PolygonEntity(new Point(150, 150), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+		PolygonEntity e4 = new PolygonEntity(new Point(250, 250), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(200d, 1d), new EntityPoint(235d, 1d), new EntityPoint(265d, 1d),
 				new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
 		e4.setScale(65);
@@ -121,7 +121,7 @@ public class Testapp extends Application {
 			@Override
 			public void run() {
 
-				List<Point> findPath = Algorithm.findPath(user, new Point(0, 0), map,
+				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map,
 						user.getRadius());
 				System.out.println(findPath.size());
 
