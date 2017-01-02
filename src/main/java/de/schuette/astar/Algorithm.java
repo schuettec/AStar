@@ -1,4 +1,4 @@
-package de.schuette.world;
+package de.schuette.astar;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +13,7 @@ import de.schuette.integration.Testapp;
 import de.schuette.math.Circle;
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
+import de.schuette.world.Map;
 import de.schuette.world.skills.Entity;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;

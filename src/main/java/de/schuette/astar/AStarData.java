@@ -1,4 +1,4 @@
-package de.schuette.world;
+package de.schuette.astar;
 
 import de.schuette.math.Point;
 

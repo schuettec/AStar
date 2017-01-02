@@ -1,4 +1,4 @@
-package de.schuette.algorithm.astar;
+package algorithm.astar.array;
 
 public class Node implements Comparable<Node> {
 

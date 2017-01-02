@@ -1,6 +1,6 @@
-package de.schuette.algorithm.astar;
+package algorithm.astar.array;
 
-import static de.schuette.algorithm.astar.Util.*;
+import static algorithm.astar.array.Util.*;
 
 public class Type {
 	public static final Type FREE = new Type(utf8(0x2219));

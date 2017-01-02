@@ -1,7 +1,7 @@
-package de.schuette.algorithm.astar;
+package algorithm.astar.array;
 
-import static de.schuette.algorithm.astar.Type.*;
-import static de.schuette.algorithm.astar.Util.*;
+import static algorithm.astar.array.Type.*;
+import static algorithm.astar.array.Util.*;
 
 import java.util.LinkedList;
 import java.util.List;

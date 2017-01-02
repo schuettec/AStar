@@ -1,13 +1,12 @@
 package de.schuette.integration;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.schuette.astar.Algorithm;
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
-import de.schuette.world.Algorithm;
 import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
 import de.schuette.world.Map;
@@ -121,8 +120,7 @@ public class Testapp extends Application {
 			@Override
 			public void run() {
 
-				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map,
-						user.getRadius());
+				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius());
 				System.out.println(findPath.size());
 
 				// sceneContent.getChildren().removeAll(paths);
