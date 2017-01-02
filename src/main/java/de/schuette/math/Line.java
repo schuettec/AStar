@@ -1,5 +1,7 @@
 package de.schuette.math;
 
+import de.schuette.world.EntityPoint;
+
 /**
  * This class describes a geometric line in a 2D coordinate system. It is
  * basically a representation of the formula <code>g(x) = m * x + b</code>
@@ -17,6 +19,10 @@ public class Line implements Shape, Cloneable {
 		this.setX2(new Point(x2.x, x2.y));
 	}
 
+	public Polygon toPolygon() {
+		return new Polygon(new EntityPoint(x1), new EntityPoint(x2) );
+	}
+	
 	/**
 	 * Checks if this line intersects the specified {@link Line}.
 	 * 

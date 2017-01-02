@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Test {
+public class FindReplaceTool {
 	public static void main(String[] args) {
 
 		String xm = "100";

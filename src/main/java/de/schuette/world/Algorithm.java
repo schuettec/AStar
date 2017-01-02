@@ -8,17 +8,20 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import de.schuette.integration.CircleEntity;
 import de.schuette.integration.Testapp;
 import de.schuette.math.Circle;
+import de.schuette.math.Line;
 import de.schuette.math.Math2D;
 import de.schuette.math.Point;
 import de.schuette.world.skills.Entity;
+import de.schuette.world.skills.Obstacle;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
 public class Algorithm {
 
-	public static List<Point> findPath(Circle entity, Point target, List<Entity> map, double stepRadius) {
+	public static List<Point> findPath(CircleEntity entity, Point target, Map map, double stepRadius) {
 
 		PriorityQueue<Point> openList = new PriorityQueue<Point>(new Comparator<Point>() {
 			@Override
@@ -94,7 +97,7 @@ public class Algorithm {
 
 	}
 
-	private static double heuristic(Point current, Point successor, Circle start, Point end, List<Entity> map) {
+	private static double heuristic(Point current, Point successor, CircleEntity start, Point end, Map map) {
 
 		// {
 		// Map copy = map.clone();
@@ -121,15 +124,21 @@ public class Algorithm {
 		return Math2D.getEntfernung(successor, end);
 	}
 
-	private static void expandNode(Point current, Circle start, Point end, List<Entity> map,
-			PriorityQueue<Point> openList, Set<Point> closedList, double radius) {
+	private static void expandNode(Point current, CircleEntity start, Point end, Map map, PriorityQueue<Point> openList,
+			Set<Point> closedList, double radius) {
 
 		List<Point> successors = new ArrayList<>();
 		for (int i = 0; i <= 315; i += 45) {
 			Point circle = Math2D.getCircle(current, radius, i);
-			// Check for collision:
-
-			successors.add(circle);
+			// Create collision shape: A line from current point to the next
+			// step.
+			Line line = new Line(current, circle);
+			Set<Entity> ignore = new HashSet<>();
+			ignore.add(start);
+			boolean hasCollision = map.hasCollision(line.toPolygon(), ignore, false);
+			if (!hasCollision) {
+				successors.add(circle);
+			}
 		}
 
 		// {

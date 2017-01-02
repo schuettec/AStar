@@ -1,6 +1,6 @@
 package de.schuette.world;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -25,12 +25,12 @@ public class Collisions {
 	public static void detectCollision(CollisionMap collisionMap, Set<Entity> map, boolean all) {
 		collisionMap.clearCollisions();
 
-		for (Entity c1 : new ArrayList<>(map)) {
+		for (Entity c1 : new HashSet<>(map)) {
 			if (!(c1 instanceof Obstacle)) {
 				continue;
 			}
 
-			for (Entity c2 : new ArrayList<>(map)) {
+			for (Entity c2 : new HashSet<>(map)) {
 				if (!(c2 instanceof Obstacle)) {
 					continue;
 				}
@@ -52,26 +52,46 @@ public class Collisions {
 		}
 	}
 
+	public static List<Point> detectFirstCollision(Shape shape, Set<Entity> map, boolean all) {
+
+		for (Entity c1 : new HashSet<>(map)) {
+			if (!(c1 instanceof Obstacle)) {
+				continue;
+			}
+			Obstacle o1 = (Obstacle) c1;
+			List<Point> collision = detectCollision(shape, o1.getCollisionShape(), all);
+			// Collision may be null if there is none
+			if (collision != null) {
+				collision = detectCollision(o1.getCollisionShape(), shape, all);
+			}
+			if (!collision.isEmpty()) {
+				return collision;
+			}
+		}
+		return null;
+	}
+
 	public static Collision detectCollision(Obstacle e1, Obstacle e2, boolean all) {
-		Shape o1 = e1.getCollisionShape();
-		Shape o2 = e2.getCollisionShape();
+		Shape s1 = e1.getCollisionShape();
+		Shape s2 = e2.getCollisionShape();
+		List<Point> collisions = detectCollision(s1, s2, all);
+		return new Collision(e1, e2, collisions);
+	}
+
+	public static List<Point> detectCollision(Shape s1, Shape s2, boolean all) {
 		List<Point> collisions = null;
 
-		if (o1 instanceof Polygon && o2 instanceof Polygon) {
-			collisions = _detectCollision((Polygon) o1, (Polygon) o2, all);
-		} else if (o1 instanceof Circle && o2 instanceof Circle) {
-			collisions = _detectCollision((Circle) o1, (Circle) o2, all);
-		} else if (o1 instanceof Circle && o2 instanceof Polygon) {
-			collisions = _detectCollision((Circle) o1, (Polygon) o2, all);
+		if (s1 instanceof Polygon && s2 instanceof Polygon) {
+			collisions = _detectCollision((Polygon) s1, (Polygon) s2, all);
+		} else if (s1 instanceof Circle && s2 instanceof Circle) {
+			collisions = _detectCollision((Circle) s1, (Circle) s2, all);
+		} else if (s1 instanceof Circle && s2 instanceof Polygon) {
+			collisions = _detectCollision((Circle) s1, (Polygon) s2, all);
 		} else {
-			collisions = _detectCollision((Circle) o2, (Polygon) o1, all);
+			collisions = _detectCollision((Circle) s2, (Polygon) s1, all);
 		}
 
-		if (collisions.isEmpty()) {
-			return null;
-		} else {
-			return new Collision(e1, e2, collisions);
-		}
+		return collisions;
 	}
 
 	private static List<Point> _detectCollision(Circle p1, Circle p2, boolean all) {

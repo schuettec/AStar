@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.schuette.math.Point;
+import de.schuette.math.Shape;
 import de.schuette.world.skills.Entity;
 import de.schuette.world.skills.Updateable;
 
@@ -77,6 +79,32 @@ public class Map implements Updateable {
 	 */
 	public boolean hasCollision(Entity entity) {
 		return detectedCollision.hasCollision(entity);
+	}
+
+	public List<Point> getCollision(Shape shape, boolean all) {
+		return Collisions.detectFirstCollision(shape, map, all);
+	}
+
+	public List<Point> getCollision(Shape shape, Set<Entity> ignore, boolean all) {
+		Set<Entity> toCheck = filter(ignore);
+		return Collisions.detectFirstCollision(shape, toCheck, all);
+	}
+
+	private Set<Entity> filter(Set<Entity> ignore) {
+		Set<Entity> toCheck = new HashSet<>(map);
+		if (ignore != null) {
+			toCheck.removeAll(ignore);
+		}
+		return toCheck;
+	}
+
+	public boolean hasCollision(Shape shape, boolean all) {
+		return Collisions.detectFirstCollision(shape, map, all) != null;
+	}
+
+	public boolean hasCollision(Shape shape, Set<Entity> ignore, boolean all) {
+		Set<Entity> toCheck = filter(ignore);
+		return Collisions.detectFirstCollision(shape, toCheck, all) != null;
 	}
 
 	/**

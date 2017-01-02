@@ -1,11 +1,13 @@
 package de.schuette.integration;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
+import de.schuette.world.Algorithm;
 import de.schuette.world.Collision;
 import de.schuette.world.EntityPoint;
 import de.schuette.world.Map;
@@ -19,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -41,9 +44,9 @@ public class Testapp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		Pane sceneContent = new Pane();
-		// Pane debugContent = new Pane();
-		// StackPane stack = new StackPane(sceneContent, debugContent);
-		// DEBUG = debugContent;
+		Pane debugContent = new Pane();
+		StackPane stack = new StackPane(sceneContent, debugContent);
+		DEBUG = debugContent;
 
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
 		user.setScale(65);
@@ -112,30 +115,30 @@ public class Testapp extends Application {
 		List<Circle> paths = new LinkedList<>();
 
 		// Find path:
-		//
-		// Thread t = new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		//
-		// List<Point> findPath = Algorithm.findPath(user, new Point(0, 0), map,
-		// user.getRadius());
-		// System.out.println(findPath.size());
-		//
-		// // sceneContent.getChildren().removeAll(paths);
-		//
-		// for (Point p : findPath) {
-		//
-		// Circle c = new Circle(5);
-		// c.setFill(Color.GREEN);
-		// c.setTranslateX(p.x);
-		// c.setTranslateY(p.y);
-		// paths.add(c);
-		//
-		// }
-		// }
-		// });
-		// t.start();
+
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				List<Point> findPath = Algorithm.findPath(user, new Point(0, 0), map,
+						user.getRadius());
+				System.out.println(findPath.size());
+
+				// sceneContent.getChildren().removeAll(paths);
+
+				for (Point p : findPath) {
+
+					Circle c = new Circle(5);
+					c.setFill(Color.GREEN);
+					c.setTranslateX(p.x);
+					c.setTranslateY(p.y);
+					paths.add(c);
+
+				}
+			}
+		});
+		t.start();
 
 		sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
 			@Override
@@ -146,7 +149,7 @@ public class Testapp extends Application {
 			}
 		});
 
-		Scene scene = new Scene(sceneContent, 1000, 1000);
+		Scene scene = new Scene(stack, 1000, 1000);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
