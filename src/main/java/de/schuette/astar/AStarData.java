@@ -7,4 +7,5 @@ public class AStarData {
 	double priority;
 	double g;
 	Point next;
+	Coords visitedMapCoords;
 }

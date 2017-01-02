@@ -37,14 +37,19 @@ public class Algorithm {
 
 		Point current = null;
 
-		double targetRadius = entity.getRadius();
+		double targetRadius = 2 * entity.getRadius();
+
+		// Create a visited-map.
+		DynamicArray<Boolean> visitedMap = new DynamicArray<>(Boolean.class);
+		// The current step is already visited.
+		visitedMap.setCurrent(true);
 
 		do {
 			System.out.println("Läuft");
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					Testapp.DEBUG.getChildren().clear();
+					// Testapp.DEBUG.getChildren().clear();
 					for (Point p : openList) {
 						javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
 						c.setFill(Color.BLUE);
@@ -69,7 +74,7 @@ public class Algorithm {
 
 			closedList.add(current);
 
-			expandNode(current, entity, target, map, openList, closedList, stepRadius);
+			expandNode(visitedMap, current, entity, target, map, openList, closedList, stepRadius);
 
 		} while (!openList.isEmpty());
 
@@ -87,31 +92,40 @@ public class Algorithm {
 		return Math2D.getEntfernung(successor, end);
 	}
 
-	private static void expandNode(Point current, CircleEntity start, Point end, Map map, PriorityQueue<Point> openList,
-			Set<Point> closedList, double radius) {
+	private static void expandNode(DynamicArray<Boolean> visitedMap, Point current, CircleEntity start, Point end,
+			Map map, PriorityQueue<Point> openList, Set<Point> closedList, double radius) {
 
 		List<Point> successors = new ArrayList<>();
 
-		for (int i = 0; i <= 315; i += 45) {
-			Point circle = Math2D.getCircle(current, radius, i);
+		for (Direction direction : Direction.values()) {
+
+			if (visitedMap.hasCurrent(direction)) {
+				// If the visited map already knows about this field, drop it,
+				// we already visited it.
+				continue;
+			}
+
+			double dx = direction.getDX() * radius;
+			double dy = direction.getDY() * radius;
+			Point stepPoint = current.clone();
+			stepPoint.translate(dx, dy);
+			// Set the visited-map coords on the point to move the cursor later
+			// in the algorithm
+			Coords visited = visitedMap.getCursor().move(direction);
+			getData(stepPoint).visitedMapCoords = visited;
+
 			// Create collision shape: A line from current point to the next
 			// step.
-			Circle stepShape = start.getCollisionShape().clone().setPosition(circle);
+			Circle stepShape = start.getCollisionShape().clone().setPosition(stepPoint);
 			Set<Entity> ignore = new HashSet<>();
 			ignore.add(start);
 			boolean hasCollision = map.hasCollision(stepShape, ignore, false);
 			if (!hasCollision) {
-				successors.add(circle);
+				successors.add(stepPoint);
 			}
 		}
 
-		// {
-		// Map copy = map.clone();
-		// copy.set(current.getCoordinates(), new Type("!"));
-		// copy.set(successors, new Type("n"));
-		// System.out.println(copy);
-		// System.out.println();
-		// }
+		System.out.println(visitedMap.toString());
 
 		for (Point successor : successors) {
 
@@ -124,6 +138,11 @@ public class Algorithm {
 			if (openList.contains(successor) && tentative_g >= getData(successor).g) {
 				continue;
 			}
+
+			Coords visitedMapCoords = getData(successor).visitedMapCoords;
+			visitedMap.setCursor(visitedMapCoords);
+			visitedMap.set(visitedMapCoords, true);
+			System.out.println(visitedMap.toString());
 
 			getData(successor).next = current;
 			getData(successor).g = tentative_g;

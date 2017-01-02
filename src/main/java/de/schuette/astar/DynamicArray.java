@@ -72,6 +72,16 @@ public class DynamicArray<T> {
 	}
 
 	/**
+	 * Sets the current cursor to the specified position.
+	 * 
+	 * @param current
+	 *            The new cursor position.
+	 */
+	public void setCursor(Coords current) {
+		this.current = current;
+	}
+
+	/**
 	 * @return Returns the number of elements this collection is currently
 	 *         storing.
 	 */
@@ -185,6 +195,24 @@ public class DynamicArray<T> {
 		if (coords.y > maxY) {
 			maxY = coords.y;
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+
+		T[][] realArray = toArray();
+		for (int y = 0; y < realArray.length; y++) {
+			for (int x = 0; x < realArray[y].length; x++) {
+				String string = String.valueOf(realArray[y][x]);
+				if (string.length() > 12) {
+					string.subSequence(0, 11);
+				}
+				builder.append(String.format("%12s", string));
+			}
+			builder.append("\n");
+		}
+		return builder.toString();
 	}
 
 }
