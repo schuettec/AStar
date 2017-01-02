@@ -37,10 +37,11 @@ public class Algorithm {
 
 		Point current = null;
 
-		double targetRadius = 2 * entity.getRadius();
+		double targetRadius = entity.getRadius() * 2;
 
 		// Create a visited-map.
 		DynamicArray<Boolean> visitedMap = new DynamicArray<>(Boolean.class);
+		getData(startNode).visitedMapCoords = visitedMap.getCursor();
 		// The current step is already visited.
 		visitedMap.setCurrent(true);
 
@@ -52,7 +53,7 @@ public class Algorithm {
 					// Testapp.DEBUG.getChildren().clear();
 					for (Point p : openList) {
 						javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
-						c.setFill(Color.BLUE);
+						c.setFill(Color.GRAY);
 						c.setTranslateX(p.x);
 						c.setTranslateY(p.y);
 						Testapp.DEBUG.getChildren().add(c);
@@ -67,6 +68,28 @@ public class Algorithm {
 				e.printStackTrace();
 			}
 			current = openList.poll();
+
+			System.out.println("Current: " + current);
+			System.out.println("Target: " + target);
+			System.out.println("Target Radius: " + targetRadius);
+
+			final Point finalCurrent = current;
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					javafx.scene.shape.Circle t = new javafx.scene.shape.Circle(targetRadius);
+					t.setFill(Color.MAGENTA);
+					t.setTranslateX(target.x);
+					t.setTranslateY(target.y);
+					Testapp.DEBUG.getChildren().add(t);
+
+					javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
+					c.setFill(Color.DARKCYAN);
+					c.setTranslateX(finalCurrent.x);
+					c.setTranslateY(finalCurrent.y);
+					Testapp.DEBUG.getChildren().add(c);
+				}
+			});
 
 			if (Math2D.isInCircle(current, target, targetRadius)) {
 				break;
@@ -95,6 +118,8 @@ public class Algorithm {
 	private static void expandNode(DynamicArray<Boolean> visitedMap, Point current, CircleEntity start, Point end,
 			Map map, PriorityQueue<Point> openList, Set<Point> closedList, double radius) {
 
+		visitedMap.setCursor(getData(current).visitedMapCoords);
+
 		List<Point> successors = new ArrayList<>();
 
 		for (Direction direction : Direction.values()) {
@@ -109,8 +134,6 @@ public class Algorithm {
 			double dy = direction.getDY() * radius;
 			Point stepPoint = current.clone();
 			stepPoint.translate(dx, dy);
-			// Set the visited-map coords on the point to move the cursor later
-			// in the algorithm
 			Coords visited = visitedMap.getCursor().move(direction);
 			getData(stepPoint).visitedMapCoords = visited;
 
@@ -122,10 +145,9 @@ public class Algorithm {
 			boolean hasCollision = map.hasCollision(stepShape, ignore, false);
 			if (!hasCollision) {
 				successors.add(stepPoint);
+				visitedMap.set(visited, true);
 			}
 		}
-
-		System.out.println(visitedMap.toString());
 
 		for (Point successor : successors) {
 
@@ -138,11 +160,6 @@ public class Algorithm {
 			if (openList.contains(successor) && tentative_g >= getData(successor).g) {
 				continue;
 			}
-
-			Coords visitedMapCoords = getData(successor).visitedMapCoords;
-			visitedMap.setCursor(visitedMapCoords);
-			visitedMap.set(visitedMapCoords, true);
-			System.out.println(visitedMap.toString());
 
 			getData(successor).next = current;
 			getData(successor).g = tentative_g;

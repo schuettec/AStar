@@ -28,8 +28,6 @@ import javafx.util.Duration;
 
 public class Testapp extends Application {
 
-	private static final int TARGET_RADIUS = 155;
-
 	public static void main(String[] args) {
 		Application.launch(Testapp.class, args);
 
@@ -56,9 +54,6 @@ public class Testapp extends Application {
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e1.setScale(65);
 
-		Circle target = new Circle(300, 300, TARGET_RADIUS);
-		DEBUG.getChildren().add(target);
-
 		PolygonEntity e2 = new PolygonEntity(new Point(200, 200), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e2.setScale(65);
@@ -73,7 +68,7 @@ public class Testapp extends Application {
 		Map map = new Map();
 		map.addEntity(user, e1, e2, e3, e4);
 
-		sceneContent.getChildren().addAll(user, e1, e2, e3, e4, target);
+		sceneContent.getChildren().addAll(user, e1, e2, e3, e4);
 
 		synchronizeEntities(sceneContent);
 
@@ -125,7 +120,7 @@ public class Testapp extends Application {
 			@Override
 			public void run() {
 
-				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius());
+				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius() / 2d);
 				System.out.println(findPath.size());
 
 				// sceneContent.getChildren().removeAll(paths);
