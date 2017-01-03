@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.schuette.astar.Algorithm;
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.Collision;
@@ -50,9 +49,16 @@ public class Testapp extends Application {
 		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
 		user.setScale(65);
 
+		CircleEntity c1 = new CircleEntity(new AbstractCircleObstacle(new Point(800, 700), 1));
+		c1.setScale(65);
+
 		PolygonEntity e1 = new PolygonEntity(new Point(300, 300), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
 		e1.setScale(65);
+
+		PolygonEntity e21 = new PolygonEntity(new Point(300, 300), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
+		e21.setScale(65);
 
 		PolygonEntity e2 = new PolygonEntity(new Point(200, 200), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
 				new EntityPoint(225d, 1d), new EntityPoint(315d, 1d));
@@ -66,9 +72,9 @@ public class Testapp extends Application {
 		e4.setScale(65);
 
 		Map map = new Map();
-		map.addEntity(user, e1, e2, e3, e4);
+		map.addEntity(user, c1, e1, e21, e2, e3, e4);
 
-		sceneContent.getChildren().addAll(user, e1, e2, e3, e4);
+		sceneContent.getChildren().addAll(user, c1, e1, e21, e2, e3, e4);
 
 		synchronizeEntities(sceneContent);
 
@@ -102,6 +108,7 @@ public class Testapp extends Application {
 
 				// Animate
 				e1.rotate(1);
+				e21.rotate(1);
 				e2.rotate(1);
 				e3.rotate(1);
 				e4.rotate(1);
@@ -120,25 +127,24 @@ public class Testapp extends Application {
 			@Override
 			public void run() {
 
-				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius() / 2d);
-				System.out.println(findPath.size());
-
-				// sceneContent.getChildren().removeAll(paths);
-
-				for (Point p : findPath) {
-
-					Circle c = new Circle(5);
-					c.setFill(Color.GREEN);
-					c.setTranslateX(p.x);
-					c.setTranslateY(p.y);
-					paths.add(c);
-
-				}
+				// List<Point> findPath = Algorithm.findPath(user,
+				// e1.getPosition(), map, user.getRadius() / 2d);
+				// System.out.println(findPath.size());
+				//
+				// for (Point p : findPath) {
+				//
+				// Circle c = new Circle(5);
+				// c.setFill(Color.GREEN);
+				// c.setTranslateX(p.x);
+				// c.setTranslateY(p.y);
+				// paths.add(c);
+				//
+				// }
 			}
 		});
 		t.start();
 
-		sceneContent.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+		debugContent.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
 				user.setPosition(mouseEvent.getX(), mouseEvent.getY());

@@ -37,7 +37,9 @@ public class Algorithm {
 
 		Point current = null;
 
-		double targetRadius = entity.getRadius() * 2;
+		double targetRadius = entity.getRadius() * 2; // TODO: REMOVE THE
+														// FACTOR, THIS IS ONLY
+														// FOR TESTING
 
 		// Create a visited-map.
 		DynamicArray<Boolean> visitedMap = new DynamicArray<>(Boolean.class);
@@ -69,16 +71,13 @@ public class Algorithm {
 			}
 			current = openList.poll();
 
-			System.out.println("Current: " + current);
-			System.out.println("Target: " + target);
-			System.out.println("Target Radius: " + targetRadius);
-
 			final Point finalCurrent = current;
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
 					javafx.scene.shape.Circle t = new javafx.scene.shape.Circle(targetRadius);
-					t.setFill(Color.MAGENTA);
+					t.setFill(null);
+					t.setStroke(Color.MAGENTA);
 					t.setTranslateX(target.x);
 					t.setTranslateY(target.y);
 					Testapp.DEBUG.getChildren().add(t);

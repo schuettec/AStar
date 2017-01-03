@@ -94,8 +94,38 @@ public class Collisions {
 		return collisions;
 	}
 
-	private static List<Point> _detectCollision(Circle p1, Circle p2, boolean all) {
-		throw new UnsupportedOperationException();
+	private static List<Point> _detectCollision(Circle c1, Circle c2, boolean all) {
+		List<Point> collisions = new LinkedList<>();
+
+		double d = Math2D.getEntfernung(c1.getPosition(), c2.getPosition());
+
+		double r0 = c1.getRadius();
+		double r1 = c2.getRadius();
+		if (d > r0 + r1) {
+			return collisions;
+		} else if (d < Math.abs(r0 - r1)) {
+			return collisions;
+		} else if (d == 0 && r0 == r1) {
+			Point p = c1.getPosition().clone();
+			collisions.add(p);
+			return collisions;
+		}
+
+		double a = (Math.pow(r0, 2) - Math.pow(r1, 2) + Math.pow(d, 2)) / (2d * d);
+		double h = Math.sqrt(Math.pow(r0, 2) - Math.pow(a, 2));
+
+		Point p0 = c1.getPosition();
+		Point p1 = c2.getPosition();
+		Point p2 = new Point(p0.getX() + a * (p1.getX() - p0.getX()) / d, p0.getY() + a * (p1.getY() - p0.getY()) / d);
+
+		Point p31 = new Point(p2.getX() + h * (p1.getY() - p0.getY()) / d, p2.getY() - h * (p1.getX() - p0.getX()) / d);
+		Point p32 = new Point(p2.getX() - h * (p1.getY() - p0.getY()) / d, p2.getY() + h * (p1.getX() - p0.getX()) / d);
+
+		collisions.add(p31);
+		collisions.add(p32);
+
+		return collisions;
+
 	}
 
 	private static List<Point> _detectCollision(Circle p1, Polygon p2, boolean all) {
