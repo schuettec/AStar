@@ -15,7 +15,6 @@ import de.schuette.math.Math2D;
 import de.schuette.math.Point;
 import de.schuette.world.Map;
 import de.schuette.world.skills.Entity;
-import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
 public class Algorithm {
@@ -37,7 +36,7 @@ public class Algorithm {
 
 		Point current = null;
 
-		double targetRadius = entity.getRadius() * 2; // TODO: REMOVE THE
+		double targetRadius = entity.getRadius() * 3; // TODO: REMOVE THE
 														// FACTOR, THIS IS ONLY
 														// FOR TESTING
 
@@ -49,46 +48,36 @@ public class Algorithm {
 
 		do {
 			System.out.println("Läuft");
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					// Testapp.DEBUG.getChildren().clear();
-					for (Point p : openList) {
-						javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
-						c.setFill(Color.GRAY);
-						c.setTranslateX(p.x);
-						c.setTranslateY(p.y);
-						Testapp.DEBUG.getChildren().add(c);
-					}
-				}
-			});
-
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for (Point p : openList) {
+				javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
+				c.setFill(Color.GRAY);
+				c.setTranslateX(p.x);
+				c.setTranslateY(p.y);
+				Testapp.DEBUG.getChildren().add(c);
 			}
+
+			// try {
+			// Thread.sleep(200);
+			// } catch (InterruptedException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+
 			current = openList.poll();
 
 			final Point finalCurrent = current;
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					javafx.scene.shape.Circle t = new javafx.scene.shape.Circle(targetRadius);
-					t.setFill(null);
-					t.setStroke(Color.MAGENTA);
-					t.setTranslateX(target.x);
-					t.setTranslateY(target.y);
-					Testapp.DEBUG.getChildren().add(t);
+			javafx.scene.shape.Circle t = new javafx.scene.shape.Circle(targetRadius);
+			t.setFill(null);
+			t.setStroke(Color.MAGENTA);
+			t.setTranslateX(target.x);
+			t.setTranslateY(target.y);
+			Testapp.DEBUG.getChildren().add(t);
 
-					javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
-					c.setFill(Color.DARKCYAN);
-					c.setTranslateX(finalCurrent.x);
-					c.setTranslateY(finalCurrent.y);
-					Testapp.DEBUG.getChildren().add(c);
-				}
-			});
+			javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(5);
+			c.setFill(Color.DARKCYAN);
+			c.setTranslateX(finalCurrent.x);
+			c.setTranslateY(finalCurrent.y);
+			Testapp.DEBUG.getChildren().add(c);
 
 			if (Math2D.isInCircle(current, target, targetRadius)) {
 				break;

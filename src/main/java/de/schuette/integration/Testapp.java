@@ -3,6 +3,7 @@ package de.schuette.integration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.schuette.astar.Algorithm;
 import de.schuette.math.Point;
@@ -79,6 +80,8 @@ public class Testapp extends Application {
 
 		synchronizeEntities(sceneContent);
 
+		AtomicInteger times = new AtomicInteger(0);
+
 		AnimationTimer timer = new AnimationTimer() {
 
 			@Override
@@ -114,6 +117,25 @@ public class Testapp extends Application {
 				e3.rotate(1);
 				e4.rotate(1);
 
+				times.incrementAndGet();
+
+				if (times.get() == 100) {
+
+					List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius() / 2d);
+					System.out.println(findPath.size());
+
+					for (Point p : findPath) {
+
+						Circle c = new Circle(5);
+						c.setFill(Color.GREEN);
+						c.setTranslateX(p.x);
+						c.setTranslateY(p.y);
+						DEBUG.getChildren().add(c);
+
+					}
+
+				}
+
 			}
 
 		};
@@ -123,32 +145,33 @@ public class Testapp extends Application {
 
 		// Find path:
 
-		Thread t = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius() / 2d);
-				System.out.println(findPath.size());
-
-				for (Point p : findPath) {
-
-					Circle c = new Circle(5);
-					c.setFill(Color.GREEN);
-					c.setTranslateX(p.x);
-					c.setTranslateY(p.y);
-					paths.add(c);
-
-				}
-			}
-		});
-		t.start();
+		// Thread t = new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		//
+		// List<Point> findPath = Algorithm.findPath(user, e1.getPosition(),
+		// map, user.getRadius() / 2d);
+		// System.out.println(findPath.size());
+		//
+		// for (Point p : findPath) {
+		//
+		// Circle c = new Circle(5);
+		// c.setFill(Color.GREEN);
+		// c.setTranslateX(p.x);
+		// c.setTranslateY(p.y);
+		// paths.add(c);
+		//
+		// }
+		// }
+		// });
+		// t.start();
 
 		debugContent.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				user.setPosition(mouseEvent.getX(), mouseEvent.getY());
-				mouseEvent.consume();
+				// user.setPosition(mouseEvent.getX(), mouseEvent.getY());
+				// mouseEvent.consume();
 
 			}
 		});
