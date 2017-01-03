@@ -3,6 +3,7 @@ package de.schuette.integration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.schuette.astar.Algorithm;
@@ -48,7 +49,7 @@ public class Testapp extends Application {
 		StackPane stack = new StackPane(sceneContent, debugContent);
 		DEBUG = debugContent;
 
-		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(700, 700), 1));
+		CircleEntity user = new CircleEntity(new AbstractCircleObstacle(new Point(800, 800), 1));
 		user.setScale(65);
 
 		CircleEntity c1 = new CircleEntity(new AbstractCircleObstacle(new Point(800, 700), 1));
@@ -73,10 +74,20 @@ public class Testapp extends Application {
 				new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
 		e4.setScale(65);
 
-		Map map = new Map();
-		map.addEntity(user, c1, e1, e21, e2, e3, e4);
+		PolygonEntity e5 = new PolygonEntity(new Point(650, 650), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(200d, 1d), new EntityPoint(235d, 1d), new EntityPoint(265d, 1d),
+				new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
+		e5.setScale(65);
 
-		sceneContent.getChildren().addAll(user, c1, e1, e21, e2, e3, e4);
+		PolygonEntity e6 = new PolygonEntity(new Point(350, 650), new EntityPoint(45d, 1d), new EntityPoint(135d, 1d),
+				new EntityPoint(200d, 1d), new EntityPoint(235d, 1d), new EntityPoint(265d, 1d),
+				new EntityPoint(300d, 1d), new EntityPoint(330d, 1d), new EntityPoint(360d, 1d));
+		e6.setScale(65);
+
+		Map map = new Map();
+		map.addEntity(user, c1, e1, e21, e2, e3, e4, e5, e6);
+
+		sceneContent.getChildren().addAll(user, c1, e1, e21, e2, e3, e4, e5, e6);
 
 		synchronizeEntities(sceneContent);
 
@@ -121,6 +132,8 @@ public class Testapp extends Application {
 
 				if (times.get() == 100) {
 
+					long before = System.nanoTime();
+
 					List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius() / 2d);
 					System.out.println(findPath.size());
 
@@ -133,6 +146,10 @@ public class Testapp extends Application {
 						DEBUG.getChildren().add(c);
 
 					}
+
+					long after = System.nanoTime();
+
+					System.out.println("Pathfinding took " + TimeUnit.NANOSECONDS.toMillis(after - before) + "ms.");
 
 				}
 
