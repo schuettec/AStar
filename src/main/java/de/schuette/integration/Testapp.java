@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.schuette.astar.Algorithm;
 import de.schuette.math.Point;
 import de.schuette.world.AbstractCircleObstacle;
 import de.schuette.world.Collision;
@@ -127,19 +128,18 @@ public class Testapp extends Application {
 			@Override
 			public void run() {
 
-				// List<Point> findPath = Algorithm.findPath(user,
-				// e1.getPosition(), map, user.getRadius() / 2d);
-				// System.out.println(findPath.size());
-				//
-				// for (Point p : findPath) {
-				//
-				// Circle c = new Circle(5);
-				// c.setFill(Color.GREEN);
-				// c.setTranslateX(p.x);
-				// c.setTranslateY(p.y);
-				// paths.add(c);
-				//
-				// }
+				List<Point> findPath = Algorithm.findPath(user, e1.getPosition(), map, user.getRadius() / 2d);
+				System.out.println(findPath.size());
+
+				for (Point p : findPath) {
+
+					Circle c = new Circle(5);
+					c.setFill(Color.GREEN);
+					c.setTranslateX(p.x);
+					c.setTranslateY(p.y);
+					paths.add(c);
+
+				}
 			}
 		});
 		t.start();
